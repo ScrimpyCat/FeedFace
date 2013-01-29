@@ -1,0 +1,578 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F306304E167CBE4A0080EF76 /* ObjcNewRuntime64.h in Headers */ = {isa = PBXBuildFile; fileRef = F306304C167CBE4A0080EF76 /* ObjcNewRuntime64.h */; };
+		F3063052167CBE5D0080EF76 /* ObjcNewRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = F3063050167CBE5D0080EF76 /* ObjcNewRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3063057167CE69E0080EF76 /* FFProcess+InfoLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = F3063055167CE69E0080EF76 /* FFProcess+InfoLogging.m */; };
+		F30AF653168FD481003CC829 /* FFMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = F30AF651168FD481003CC829 /* FFMemory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30AF654168FD481003CC829 /* FFMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = F30AF652168FD481003CC829 /* FFMemory.m */; };
+		F30AF6581692DB1D003CC829 /* FFMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = F30AF6561692DB1C003CC829 /* FFMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30AF6591692DB1D003CC829 /* FFMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = F30AF6571692DB1C003CC829 /* FFMethod.m */; };
+		F30AF65C16943180003CC829 /* FFInterfaceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F30AF65A1694317F003CC829 /* FFInterfaceObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30AF65D16943180003CC829 /* FFInterfaceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F30AF65B1694317F003CC829 /* FFInterfaceObject.m */; };
+		F30B93F216797A36003A1B01 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F30B93F116797A36003A1B01 /* Cocoa.framework */; };
+		F30B93FC16797A36003A1B01 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F30B93FA16797A36003A1B01 /* InfoPlist.strings */; };
+		F30B940016797A36003A1B01 /* FeedFace.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B93FF16797A36003A1B01 /* FeedFace.m */; };
+		F30B940B16798BB4003A1B01 /* FFProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B940916798BB4003A1B01 /* FFProcess.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30B940C16798BB4003A1B01 /* FFProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B940A16798BB4003A1B01 /* FFProcess.m */; };
+		F30B940D16798D0B003A1B01 /* FeedFace.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B93FE16797A36003A1B01 /* FeedFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30B941016798E7F003A1B01 /* FFProcessx86_32.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B940E16798E7F003A1B01 /* FFProcessx86_32.h */; };
+		F30B941116798E7F003A1B01 /* FFProcessx86_32.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B940F16798E7F003A1B01 /* FFProcessx86_32.m */; };
+		F30B94191679E603003A1B01 /* FFProcessx86_64.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B94171679E603003A1B01 /* FFProcessx86_64.h */; };
+		F30B941A1679E603003A1B01 /* FFProcessx86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B94181679E603003A1B01 /* FFProcessx86_64.m */; };
+		F30B941E1679ED09003A1B01 /* FFProcess+Scanning.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B941C1679ED09003A1B01 /* FFProcess+Scanning.m */; };
+		F30B94211679ED5A003A1B01 /* FFRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B941F1679ED59003A1B01 /* FFRegion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30B94221679ED5A003A1B01 /* FFRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B94201679ED5A003A1B01 /* FFRegion.m */; };
+		F30B94251679EE6C003A1B01 /* NSValue+MachVMAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B94231679EE6B003A1B01 /* NSValue+MachVMAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F30B94261679EE6C003A1B01 /* NSValue+MachVMAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B94241679EE6C003A1B01 /* NSValue+MachVMAddress.m */; };
+		F30B94311679F877003A1B01 /* FFProcessPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B942F1679F877003A1B01 /* FFProcessPrivate.h */; };
+		F3281339167D155400485570 /* FFClass.h in Headers */ = {isa = PBXBuildFile; fileRef = F3281337167D155400485570 /* FFClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F328133A167D155400485570 /* FFClass.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281338167D155400485570 /* FFClass.m */; };
+		F3281345167E6C5100485570 /* FFIvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F3281343167E6C5000485570 /* FFIvar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3281346167E6C5100485570 /* FFIvar.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281344167E6C5000485570 /* FFIvar.m */; };
+		F3281349167E6C6700485570 /* FFProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = F3281347167E6C6700485570 /* FFProperty.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F328134A167E6C6700485570 /* FFProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281348167E6C6700485570 /* FFProperty.m */; };
+		F328134D167E6C7100485570 /* FFProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F328134B167E6C7100485570 /* FFProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F328134E167E6C7100485570 /* FFProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F328134C167E6C7100485570 /* FFProtocol.m */; };
+		F3281351167E6CDE00485570 /* FFCache.h in Headers */ = {isa = PBXBuildFile; fileRef = F328134F167E6CDE00485570 /* FFCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3281352167E6CDE00485570 /* FFCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281350167E6CDE00485570 /* FFCache.m */; };
+		F361C6231699D28300EE02EF /* ObjcCache32.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6221699D28300EE02EF /* ObjcCache32.h */; };
+		F361C6251699D28B00EE02EF /* ObjcCache64.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6241699D28B00EE02EF /* ObjcCache64.h */; };
+		F361C6281699FCA800EE02EF /* NSObject+Injection.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6261699FCA800EE02EF /* NSObject+Injection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F361C6291699FCA800EE02EF /* NSObject+Injection.m in Sources */ = {isa = PBXBuildFile; fileRef = F361C6271699FCA800EE02EF /* NSObject+Injection.m */; };
+		F361C62B169B101200EE02EF /* PropertyImpMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C62A169B101100EE02EF /* PropertyImpMacros.h */; };
+		F369A51716A1AC8100E92C44 /* FFClassNew.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A51516A1AC8100E92C44 /* FFClassNew.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A51816A1AC8100E92C44 /* FFClassNew.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A51616A1AC8100E92C44 /* FFClassNew.m */; };
+		F369A51B16A1ACF800E92C44 /* FFIvarNew.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A51916A1ACF800E92C44 /* FFIvarNew.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A51C16A1ACF800E92C44 /* FFIvarNew.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A51A16A1ACF800E92C44 /* FFIvarNew.m */; };
+		F369A52416A1AD6400E92C44 /* FFClassOld.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A52216A1AD6400E92C44 /* FFClassOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A52516A1AD6400E92C44 /* FFClassOld.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A52316A1AD6400E92C44 /* FFClassOld.m */; };
+		F369A53016A1AEED00E92C44 /* FFProtocolNew.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A52E16A1AEED00E92C44 /* FFProtocolNew.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A53116A1AEED00E92C44 /* FFProtocolNew.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A52F16A1AEED00E92C44 /* FFProtocolNew.m */; };
+		F369A53416A1AF2800E92C44 /* FFIvarOld.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A53216A1AF2800E92C44 /* FFIvarOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A53516A1AF2800E92C44 /* FFIvarOld.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A53316A1AF2800E92C44 /* FFIvarOld.m */; };
+		F369A53816A1AF3700E92C44 /* FFProtocolOld.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A53616A1AF3700E92C44 /* FFProtocolOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F369A53916A1AF3700E92C44 /* FFProtocolOld.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A53716A1AF3700E92C44 /* FFProtocolOld.m */; };
+		F38FEBE51688AFF900F63E80 /* FFProcess+Reading.m in Sources */ = {isa = PBXBuildFile; fileRef = F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */; };
+		F3C2AD7716AC1967009A66B0 /* FFInjector.h in Headers */ = {isa = PBXBuildFile; fileRef = F3C2AD7516AC1967009A66B0 /* FFInjector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3C2AD7816AC1967009A66B0 /* FFInjector.m in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD7616AC1967009A66B0 /* FFInjector.m */; };
+		F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */; };
+		F3C2AD8116B1B2C3009A66B0 /* FFThread.h in Headers */ = {isa = PBXBuildFile; fileRef = F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD8016B1B2C3009A66B0 /* FFThread.m */; };
+		F3F14584168B3F5C0028D039 /* ObjcNewRuntime32.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14583168B3F5C0028D039 /* ObjcNewRuntime32.h */; };
+		F3F14587168B42050028D039 /* dyld_image32.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14586168B42050028D039 /* dyld_image32.h */; };
+		F3F14589168B42960028D039 /* dyld_image64.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14588168B42960028D039 /* dyld_image64.h */; };
+		F3F1458F168B70EF0028D039 /* FFProcess+Writing.m in Sources */ = {isa = PBXBuildFile; fileRef = F3F1458D168B70EE0028D039 /* FFProcess+Writing.m */; };
+		F3FCD31D167AD2E3002095B2 /* FFImage.h in Headers */ = {isa = PBXBuildFile; fileRef = F3FCD31B167AD2E3002095B2 /* FFImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F3FCD31E167AD2E3002095B2 /* FFImage.m in Sources */ = {isa = PBXBuildFile; fileRef = F3FCD31C167AD2E3002095B2 /* FFImage.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		F3C2AD7C16ACA04D009A66B0 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.gen.s";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${INPUT_FILE_NAME}.s",
+			);
+			script = "cd \"$INPUT_FILE_DIR\"\nas \"$INPUT_FILE_NAME\" -o \"$DERIVED_SOURCES_DIR/$INPUT_FILE_BASE.o\" $(head -n 1 \"$INPUT_FILE_NAME\" | awk '{ print substr($0,3) }')\n\nruby -e '\ncode = \".test\\n\"\nbytes = ARGV[1].split(\"\\n\").map! { |i| i.split(\" \").drop(1) }.flatten\nsymbols = ARGV[0].split(\"\\n\")\nsymbols.each_with_index { |sym, i|\n    s = sym.split(\" \")\n    name = s[0]\n    addr = s[2].to_i\n    \n    b = bytes[addr,symbols.count > i + 1 ? symbols[i+1].split(\" \")[2].to_i : bytes.count - addr].join(\",0x\")\n    code << \".globl #{name}\\n#{name}:\\n\" << (b.length > 0 ? \".byte 0x#{b}\\n\" : \"\" )\n}\n\nFile.open(ARGV[2], \"w\") { |src| src << code }' \"$(nm -s __TEXT __text -n -g -P -t d $DERIVED_SOURCES_DIR/$INPUT_FILE_BASE.o)\" \"$(otool -X -s __TEXT __text $DERIVED_SOURCES_DIR/$INPUT_FILE_BASE.o)\" \"$DERIVED_SOURCES_DIR/$INPUT_FILE_NAME.s\"\n";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXFileReference section */
+		F306304C167CBE4A0080EF76 /* ObjcNewRuntime64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcNewRuntime64.h; sourceTree = "<group>"; };
+		F3063050167CBE5D0080EF76 /* ObjcNewRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcNewRuntime.h; sourceTree = "<group>"; };
+		F3063055167CE69E0080EF76 /* FFProcess+InfoLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+InfoLogging.m"; sourceTree = "<group>"; };
+		F30AF651168FD481003CC829 /* FFMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMemory.h; sourceTree = "<group>"; };
+		F30AF652168FD481003CC829 /* FFMemory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFMemory.m; sourceTree = "<group>"; };
+		F30AF6561692DB1C003CC829 /* FFMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMethod.h; sourceTree = "<group>"; };
+		F30AF6571692DB1C003CC829 /* FFMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFMethod.m; sourceTree = "<group>"; };
+		F30AF65A1694317F003CC829 /* FFInterfaceObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFInterfaceObject.h; sourceTree = "<group>"; };
+		F30AF65B1694317F003CC829 /* FFInterfaceObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFInterfaceObject.m; sourceTree = "<group>"; };
+		F30B93EE16797A35003A1B01 /* FeedFace.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FeedFace.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F30B93F116797A36003A1B01 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		F30B93F416797A36003A1B01 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		F30B93F516797A36003A1B01 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F30B93F616797A36003A1B01 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F30B93F916797A36003A1B01 /* FeedFace-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FeedFace-Info.plist"; sourceTree = "<group>"; };
+		F30B93FB16797A36003A1B01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F30B93FD16797A36003A1B01 /* FeedFace-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FeedFace-Prefix.pch"; sourceTree = "<group>"; };
+		F30B93FE16797A36003A1B01 /* FeedFace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeedFace.h; sourceTree = "<group>"; };
+		F30B93FF16797A36003A1B01 /* FeedFace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FeedFace.m; sourceTree = "<group>"; };
+		F30B940916798BB4003A1B01 /* FFProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProcess.h; sourceTree = "<group>"; };
+		F30B940A16798BB4003A1B01 /* FFProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProcess.m; sourceTree = "<group>"; };
+		F30B940E16798E7F003A1B01 /* FFProcessx86_32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProcessx86_32.h; sourceTree = "<group>"; };
+		F30B940F16798E7F003A1B01 /* FFProcessx86_32.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProcessx86_32.m; sourceTree = "<group>"; };
+		F30B94171679E603003A1B01 /* FFProcessx86_64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProcessx86_64.h; sourceTree = "<group>"; };
+		F30B94181679E603003A1B01 /* FFProcessx86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProcessx86_64.m; sourceTree = "<group>"; };
+		F30B941C1679ED09003A1B01 /* FFProcess+Scanning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+Scanning.m"; sourceTree = "<group>"; };
+		F30B941F1679ED59003A1B01 /* FFRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFRegion.h; sourceTree = "<group>"; };
+		F30B94201679ED5A003A1B01 /* FFRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFRegion.m; sourceTree = "<group>"; };
+		F30B94231679EE6B003A1B01 /* NSValue+MachVMAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSValue+MachVMAddress.h"; sourceTree = "<group>"; };
+		F30B94241679EE6C003A1B01 /* NSValue+MachVMAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValue+MachVMAddress.m"; sourceTree = "<group>"; };
+		F30B942F1679F877003A1B01 /* FFProcessPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProcessPrivate.h; sourceTree = "<group>"; };
+		F3281337167D155400485570 /* FFClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFClass.h; sourceTree = "<group>"; };
+		F3281338167D155400485570 /* FFClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFClass.m; sourceTree = "<group>"; };
+		F3281343167E6C5000485570 /* FFIvar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFIvar.h; sourceTree = "<group>"; };
+		F3281344167E6C5000485570 /* FFIvar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFIvar.m; sourceTree = "<group>"; };
+		F3281347167E6C6700485570 /* FFProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProperty.h; sourceTree = "<group>"; };
+		F3281348167E6C6700485570 /* FFProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProperty.m; sourceTree = "<group>"; };
+		F328134B167E6C7100485570 /* FFProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProtocol.h; sourceTree = "<group>"; };
+		F328134C167E6C7100485570 /* FFProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProtocol.m; sourceTree = "<group>"; };
+		F328134F167E6CDE00485570 /* FFCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFCache.h; sourceTree = "<group>"; };
+		F3281350167E6CDE00485570 /* FFCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFCache.m; sourceTree = "<group>"; };
+		F361C6221699D28300EE02EF /* ObjcCache32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcCache32.h; sourceTree = "<group>"; };
+		F361C6241699D28B00EE02EF /* ObjcCache64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcCache64.h; sourceTree = "<group>"; };
+		F361C6261699FCA800EE02EF /* NSObject+Injection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Injection.h"; sourceTree = "<group>"; };
+		F361C6271699FCA800EE02EF /* NSObject+Injection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Injection.m"; sourceTree = "<group>"; };
+		F361C62A169B101100EE02EF /* PropertyImpMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyImpMacros.h; sourceTree = "<group>"; };
+		F369A51516A1AC8100E92C44 /* FFClassNew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFClassNew.h; sourceTree = "<group>"; };
+		F369A51616A1AC8100E92C44 /* FFClassNew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFClassNew.m; sourceTree = "<group>"; };
+		F369A51916A1ACF800E92C44 /* FFIvarNew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFIvarNew.h; sourceTree = "<group>"; };
+		F369A51A16A1ACF800E92C44 /* FFIvarNew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFIvarNew.m; sourceTree = "<group>"; };
+		F369A52216A1AD6400E92C44 /* FFClassOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFClassOld.h; sourceTree = "<group>"; };
+		F369A52316A1AD6400E92C44 /* FFClassOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFClassOld.m; sourceTree = "<group>"; };
+		F369A52E16A1AEED00E92C44 /* FFProtocolNew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProtocolNew.h; sourceTree = "<group>"; };
+		F369A52F16A1AEED00E92C44 /* FFProtocolNew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProtocolNew.m; sourceTree = "<group>"; };
+		F369A53216A1AF2800E92C44 /* FFIvarOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFIvarOld.h; sourceTree = "<group>"; };
+		F369A53316A1AF2800E92C44 /* FFIvarOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFIvarOld.m; sourceTree = "<group>"; };
+		F369A53616A1AF3700E92C44 /* FFProtocolOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProtocolOld.h; sourceTree = "<group>"; };
+		F369A53716A1AF3700E92C44 /* FFProtocolOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProtocolOld.m; sourceTree = "<group>"; };
+		F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+Reading.m"; sourceTree = "<group>"; };
+		F3C2AD7516AC1967009A66B0 /* FFInjector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFInjector.h; sourceTree = "<group>"; };
+		F3C2AD7616AC1967009A66B0 /* FFInjector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFInjector.m; sourceTree = "<group>"; };
+		F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = x86_64JumpCode.gen.s; sourceTree = "<group>"; };
+		F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFThread.h; sourceTree = "<group>"; };
+		F3C2AD8016B1B2C3009A66B0 /* FFThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFThread.m; sourceTree = "<group>"; };
+		F3F14583168B3F5C0028D039 /* ObjcNewRuntime32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcNewRuntime32.h; sourceTree = "<group>"; };
+		F3F14586168B42050028D039 /* dyld_image32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_image32.h; sourceTree = "<group>"; };
+		F3F14588168B42960028D039 /* dyld_image64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_image64.h; sourceTree = "<group>"; };
+		F3F1458D168B70EE0028D039 /* FFProcess+Writing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+Writing.m"; sourceTree = "<group>"; };
+		F3FCD31B167AD2E3002095B2 /* FFImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFImage.h; sourceTree = "<group>"; };
+		F3FCD31C167AD2E3002095B2 /* FFImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFImage.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F30B93EA16797A35003A1B01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F30B93F216797A36003A1B01 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F306304A167CBE260080EF76 /* Objc Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				F30AF65A1694317F003CC829 /* FFInterfaceObject.h */,
+				F30AF65B1694317F003CC829 /* FFInterfaceObject.m */,
+				F361C62A169B101100EE02EF /* PropertyImpMacros.h */,
+				F369A51316A1AA8D00E92C44 /* New Runtime */,
+				F369A52116A1AD4700E92C44 /* Old Runtime */,
+				F361C6221699D28300EE02EF /* ObjcCache32.h */,
+				F361C6241699D28B00EE02EF /* ObjcCache64.h */,
+				F3281337167D155400485570 /* FFClass.h */,
+				F3281338167D155400485570 /* FFClass.m */,
+				F328134F167E6CDE00485570 /* FFCache.h */,
+				F3281350167E6CDE00485570 /* FFCache.m */,
+				F3281343167E6C5000485570 /* FFIvar.h */,
+				F3281344167E6C5000485570 /* FFIvar.m */,
+				F3281347167E6C6700485570 /* FFProperty.h */,
+				F3281348167E6C6700485570 /* FFProperty.m */,
+				F328134B167E6C7100485570 /* FFProtocol.h */,
+				F328134C167E6C7100485570 /* FFProtocol.m */,
+				F30AF6561692DB1C003CC829 /* FFMethod.h */,
+				F30AF6571692DB1C003CC829 /* FFMethod.m */,
+			);
+			name = "Objc Runtime";
+			sourceTree = "<group>";
+		};
+		F30B93E216797A34003A1B01 = {
+			isa = PBXGroup;
+			children = (
+				F30B93F716797A36003A1B01 /* FeedFace */,
+				F30B93F016797A35003A1B01 /* Frameworks */,
+				F30B93EF16797A35003A1B01 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F30B93EF16797A35003A1B01 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F30B93EE16797A35003A1B01 /* FeedFace.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F30B93F016797A35003A1B01 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F30B93F116797A36003A1B01 /* Cocoa.framework */,
+				F30B93F316797A36003A1B01 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F30B93F316797A36003A1B01 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F30B93F416797A36003A1B01 /* AppKit.framework */,
+				F30B93F516797A36003A1B01 /* CoreData.framework */,
+				F30B93F616797A36003A1B01 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		F30B93F716797A36003A1B01 /* FeedFace */ = {
+			isa = PBXGroup;
+			children = (
+				F30B93FE16797A36003A1B01 /* FeedFace.h */,
+				F30B93FF16797A36003A1B01 /* FeedFace.m */,
+				F30B941F1679ED59003A1B01 /* FFRegion.h */,
+				F30B94201679ED5A003A1B01 /* FFRegion.m */,
+				F30B94231679EE6B003A1B01 /* NSValue+MachVMAddress.h */,
+				F30B94241679EE6C003A1B01 /* NSValue+MachVMAddress.m */,
+				F3FCD31B167AD2E3002095B2 /* FFImage.h */,
+				F3FCD31C167AD2E3002095B2 /* FFImage.m */,
+				F30AF651168FD481003CC829 /* FFMemory.h */,
+				F30AF652168FD481003CC829 /* FFMemory.m */,
+				F361C6261699FCA800EE02EF /* NSObject+Injection.h */,
+				F361C6271699FCA800EE02EF /* NSObject+Injection.m */,
+				F3C2AD7516AC1967009A66B0 /* FFInjector.h */,
+				F3C2AD7616AC1967009A66B0 /* FFInjector.m */,
+				F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */,
+				F3C2AD8016B1B2C3009A66B0 /* FFThread.m */,
+				F30B941216798FFD003A1B01 /* Process */,
+				F306304A167CBE260080EF76 /* Objc Runtime */,
+				F30B93F816797A36003A1B01 /* Supporting Files */,
+			);
+			path = FeedFace;
+			sourceTree = "<group>";
+		};
+		F30B93F816797A36003A1B01 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F30B93F916797A36003A1B01 /* FeedFace-Info.plist */,
+				F30B93FA16797A36003A1B01 /* InfoPlist.strings */,
+				F30B93FD16797A36003A1B01 /* FeedFace-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F30B941216798FFD003A1B01 /* Process */ = {
+			isa = PBXGroup;
+			children = (
+				F3F14586168B42050028D039 /* dyld_image32.h */,
+				F3F14588168B42960028D039 /* dyld_image64.h */,
+				F30B942F1679F877003A1B01 /* FFProcessPrivate.h */,
+				F30B940916798BB4003A1B01 /* FFProcess.h */,
+				F30B940A16798BB4003A1B01 /* FFProcess.m */,
+				F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */,
+				F30B941C1679ED09003A1B01 /* FFProcess+Scanning.m */,
+				F3F1458D168B70EE0028D039 /* FFProcess+Writing.m */,
+				F3063055167CE69E0080EF76 /* FFProcess+InfoLogging.m */,
+				F30B940E16798E7F003A1B01 /* FFProcessx86_32.h */,
+				F30B940F16798E7F003A1B01 /* FFProcessx86_32.m */,
+				F30B94171679E603003A1B01 /* FFProcessx86_64.h */,
+				F30B94181679E603003A1B01 /* FFProcessx86_64.m */,
+				F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */,
+			);
+			name = Process;
+			sourceTree = "<group>";
+		};
+		F369A51316A1AA8D00E92C44 /* New Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				F3063050167CBE5D0080EF76 /* ObjcNewRuntime.h */,
+				F3F14583168B3F5C0028D039 /* ObjcNewRuntime32.h */,
+				F306304C167CBE4A0080EF76 /* ObjcNewRuntime64.h */,
+				F369A51516A1AC8100E92C44 /* FFClassNew.h */,
+				F369A51616A1AC8100E92C44 /* FFClassNew.m */,
+				F369A51916A1ACF800E92C44 /* FFIvarNew.h */,
+				F369A51A16A1ACF800E92C44 /* FFIvarNew.m */,
+				F369A52E16A1AEED00E92C44 /* FFProtocolNew.h */,
+				F369A52F16A1AEED00E92C44 /* FFProtocolNew.m */,
+			);
+			name = "New Runtime";
+			sourceTree = "<group>";
+		};
+		F369A52116A1AD4700E92C44 /* Old Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				F369A52216A1AD6400E92C44 /* FFClassOld.h */,
+				F369A52316A1AD6400E92C44 /* FFClassOld.m */,
+				F369A53216A1AF2800E92C44 /* FFIvarOld.h */,
+				F369A53316A1AF2800E92C44 /* FFIvarOld.m */,
+				F369A53616A1AF3700E92C44 /* FFProtocolOld.h */,
+				F369A53716A1AF3700E92C44 /* FFProtocolOld.m */,
+			);
+			name = "Old Runtime";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		F30B93EB16797A35003A1B01 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F30B940D16798D0B003A1B01 /* FeedFace.h in Headers */,
+				F30B940B16798BB4003A1B01 /* FFProcess.h in Headers */,
+				F30B94211679ED5A003A1B01 /* FFRegion.h in Headers */,
+				F30AF653168FD481003CC829 /* FFMemory.h in Headers */,
+				F3FCD31D167AD2E3002095B2 /* FFImage.h in Headers */,
+				F30B94251679EE6C003A1B01 /* NSValue+MachVMAddress.h in Headers */,
+				F3063052167CBE5D0080EF76 /* ObjcNewRuntime.h in Headers */,
+				F30AF65C16943180003CC829 /* FFInterfaceObject.h in Headers */,
+				F3281339167D155400485570 /* FFClass.h in Headers */,
+				F30AF6581692DB1D003CC829 /* FFMethod.h in Headers */,
+				F3281351167E6CDE00485570 /* FFCache.h in Headers */,
+				F3281345167E6C5100485570 /* FFIvar.h in Headers */,
+				F3281349167E6C6700485570 /* FFProperty.h in Headers */,
+				F328134D167E6C7100485570 /* FFProtocol.h in Headers */,
+				F361C6281699FCA800EE02EF /* NSObject+Injection.h in Headers */,
+				F369A51716A1AC8100E92C44 /* FFClassNew.h in Headers */,
+				F369A51B16A1ACF800E92C44 /* FFIvarNew.h in Headers */,
+				F369A52416A1AD6400E92C44 /* FFClassOld.h in Headers */,
+				F369A53016A1AEED00E92C44 /* FFProtocolNew.h in Headers */,
+				F369A53416A1AF2800E92C44 /* FFIvarOld.h in Headers */,
+				F369A53816A1AF3700E92C44 /* FFProtocolOld.h in Headers */,
+				F3C2AD7716AC1967009A66B0 /* FFInjector.h in Headers */,
+				F3C2AD8116B1B2C3009A66B0 /* FFThread.h in Headers */,
+				F30B941016798E7F003A1B01 /* FFProcessx86_32.h in Headers */,
+				F30B94191679E603003A1B01 /* FFProcessx86_64.h in Headers */,
+				F30B94311679F877003A1B01 /* FFProcessPrivate.h in Headers */,
+				F306304E167CBE4A0080EF76 /* ObjcNewRuntime64.h in Headers */,
+				F3F14584168B3F5C0028D039 /* ObjcNewRuntime32.h in Headers */,
+				F3F14587168B42050028D039 /* dyld_image32.h in Headers */,
+				F3F14589168B42960028D039 /* dyld_image64.h in Headers */,
+				F361C6231699D28300EE02EF /* ObjcCache32.h in Headers */,
+				F361C6251699D28B00EE02EF /* ObjcCache64.h in Headers */,
+				F361C62B169B101200EE02EF /* PropertyImpMacros.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F30B93ED16797A35003A1B01 /* FeedFace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F30B940316797A36003A1B01 /* Build configuration list for PBXNativeTarget "FeedFace" */;
+			buildPhases = (
+				F30B93E916797A35003A1B01 /* Sources */,
+				F30B93EA16797A35003A1B01 /* Frameworks */,
+				F30B93EB16797A35003A1B01 /* Headers */,
+				F30B93EC16797A35003A1B01 /* Resources */,
+			);
+			buildRules = (
+				F3C2AD7C16ACA04D009A66B0 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = FeedFace;
+			productName = FeedFace;
+			productReference = F30B93EE16797A35003A1B01 /* FeedFace.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F30B93E416797A34003A1B01 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = F30B93E716797A34003A1B01 /* Build configuration list for PBXProject "FeedFace" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F30B93E216797A34003A1B01;
+			productRefGroup = F30B93EF16797A35003A1B01 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F30B93ED16797A35003A1B01 /* FeedFace */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F30B93EC16797A35003A1B01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F30B93FC16797A36003A1B01 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F30B93E916797A35003A1B01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F30B940016797A36003A1B01 /* FeedFace.m in Sources */,
+				F30B940C16798BB4003A1B01 /* FFProcess.m in Sources */,
+				F30B941116798E7F003A1B01 /* FFProcessx86_32.m in Sources */,
+				F30B941A1679E603003A1B01 /* FFProcessx86_64.m in Sources */,
+				F30B941E1679ED09003A1B01 /* FFProcess+Scanning.m in Sources */,
+				F30B94221679ED5A003A1B01 /* FFRegion.m in Sources */,
+				F30B94261679EE6C003A1B01 /* NSValue+MachVMAddress.m in Sources */,
+				F3FCD31E167AD2E3002095B2 /* FFImage.m in Sources */,
+				F3063057167CE69E0080EF76 /* FFProcess+InfoLogging.m in Sources */,
+				F328133A167D155400485570 /* FFClass.m in Sources */,
+				F3281346167E6C5100485570 /* FFIvar.m in Sources */,
+				F328134A167E6C6700485570 /* FFProperty.m in Sources */,
+				F328134E167E6C7100485570 /* FFProtocol.m in Sources */,
+				F3281352167E6CDE00485570 /* FFCache.m in Sources */,
+				F38FEBE51688AFF900F63E80 /* FFProcess+Reading.m in Sources */,
+				F3F1458F168B70EF0028D039 /* FFProcess+Writing.m in Sources */,
+				F30AF654168FD481003CC829 /* FFMemory.m in Sources */,
+				F30AF6591692DB1D003CC829 /* FFMethod.m in Sources */,
+				F30AF65D16943180003CC829 /* FFInterfaceObject.m in Sources */,
+				F361C6291699FCA800EE02EF /* NSObject+Injection.m in Sources */,
+				F369A51816A1AC8100E92C44 /* FFClassNew.m in Sources */,
+				F369A51C16A1ACF800E92C44 /* FFIvarNew.m in Sources */,
+				F369A52516A1AD6400E92C44 /* FFClassOld.m in Sources */,
+				F369A53116A1AEED00E92C44 /* FFProtocolNew.m in Sources */,
+				F369A53516A1AF2800E92C44 /* FFIvarOld.m in Sources */,
+				F369A53916A1AF3700E92C44 /* FFProtocolOld.m in Sources */,
+				F3C2AD7816AC1967009A66B0 /* FFInjector.m in Sources */,
+				F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */,
+				F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F30B93FA16797A36003A1B01 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F30B93FB16797A36003A1B01 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F30B940116797A36003A1B01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F30B940216797A36003A1B01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F30B940416797A36003A1B01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FeedFace/FeedFace-Prefix.pch";
+				INFOPLIST_FILE = "FeedFace/FeedFace-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		F30B940516797A36003A1B01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FeedFace/FeedFace-Prefix.pch";
+				INFOPLIST_FILE = "FeedFace/FeedFace-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F30B93E716797A34003A1B01 /* Build configuration list for PBXProject "FeedFace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F30B940116797A36003A1B01 /* Debug */,
+				F30B940216797A36003A1B01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F30B940316797A36003A1B01 /* Build configuration list for PBXNativeTarget "FeedFace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F30B940416797A36003A1B01 /* Debug */,
+				F30B940516797A36003A1B01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F30B93E416797A34003A1B01 /* Project object */;
+}
