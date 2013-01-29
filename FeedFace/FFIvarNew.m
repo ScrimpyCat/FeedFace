@@ -49,6 +49,8 @@
     [proc writeAddress: Offset.address ToAddress: Ivar.address + PROC_OFFSET_OF(ivar_t, offset)];
     
     Ivar.offset = self.offset;
+    Ivar.alignment = self.alignment;
+    Ivar.size = self.size;
     
     
     return Ivar;
