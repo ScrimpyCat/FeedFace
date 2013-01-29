@@ -36,5 +36,6 @@
 #import <FeedFace/FFCache.h>
 #import <FeedFace/FFProperty.h>
 #import <FeedFace/FFProtocol.h>
+#import <FeedFace/FFProtocolNew.h>
 #import <FeedFace/FFIvar.h>
 #import <FeedFace/FFIvarNew.h>

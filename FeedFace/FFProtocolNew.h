@@ -24,7 +24,20 @@
  */
 
 #import <FeedFace/FFProtocol.h>
+#import <FeedFace/FFClassNew.h>
 
 @interface FFProtocolNew : FFProtocol
+
+@property (nonatomic, copy) FFClassNew *isa;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSArray *protocols;
+@property (nonatomic, copy) NSArray *instanceMethods;
+@property (nonatomic, copy) NSArray *classMethods;
+@property (nonatomic, copy) NSArray *optionalInstanceMethods;
+@property (nonatomic, copy) NSArray *optionalClassMethods;
+@property (nonatomic, copy) NSArray *instanceProperties;
+@property (nonatomic) uint32_t size;
+@property (nonatomic) uint32_t flags;
+@property (nonatomic, copy) NSArray *extendedMethodTypes;
 
 @end
