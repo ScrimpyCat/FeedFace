@@ -65,7 +65,7 @@
 
 #define ADDRESS_IN_PROTOCOL(member) Address = self.address + PROC_OFFSET_OF(protocol_t, member)
 
-POINTER_TYPE_PROPERTY(FFClass, isa, setIsa, ADDRESS_IN_PROTOCOL(isa))
+POINTER_TYPE_PROPERTY(FFClassNew, isa, setIsa, ADDRESS_IN_PROTOCOL(isa))
 STRING_TYPE_PROPERTY(name, setName, ADDRESS_IN_PROTOCOL(name))
 
 -(NSArray*) protocols

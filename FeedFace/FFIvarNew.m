@@ -39,7 +39,7 @@
 
 -(id) copyToAddress: (mach_vm_address_t)address InProcess: (FFProcess *)proc
 {
-    FFIvar *Ivar = [super copyToAddress: address InProcess: proc];
+    FFIvarNew *Ivar = [super copyToAddress: address InProcess: proc];
     
     Ivar.name = self.name;
     Ivar.type = self.type;
