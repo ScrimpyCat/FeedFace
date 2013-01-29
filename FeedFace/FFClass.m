@@ -27,22 +27,7 @@
 #import "FFClass.h"
 #import "FFProcess.h"
 #import "NSValue+MachVMAddress.h"
-#import "ObjcNewRuntime32.h"
-#import "ObjcNewRuntime64.h"
 #import <objc/runtime.h>
-
-#import "FFMemory.h"
-
-#import "FFCache.h"
-#import "FFIvar.h"
-#import "FFProperty.h"
-#import "FFProtocol.h"
-#import "FFMethod.h"
-
-#import <mach/mach.h>
-#import <mach/mach_vm.h>
-
-#import "PropertyImpMacros.h"
 
 #import "FFClassOld.h"
 #import "FFClassNew.h"
