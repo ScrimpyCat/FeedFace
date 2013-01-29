@@ -32,8 +32,6 @@
 @property (nonatomic) mach_vm_address_t offset;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *type;
-@property (nonatomic) uint32_t alignment;
-@property (nonatomic) uint32_t size;
 
 +(FFIvar*) ivarAtAddress: (mach_vm_address_t)addr InProcess: (FFProcess*)proc;
 
