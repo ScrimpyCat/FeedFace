@@ -58,6 +58,7 @@
         mach_error("task_for_pid", err);
         if (err == 5) printf("Invalid PID or not running as root\n");
         
+        [self release];
         return nil;
     }
     
@@ -76,12 +77,14 @@
         {
             mach_error("task_info", err);
             printf("Task info error: %u\n", err);
+            [self release];
             return nil;
         }
         
         if (!dyldInfo.all_image_info_addr)
         {
             printf("Error\n");
+            [self release];
             return nil;
         }
         
@@ -95,6 +98,7 @@
         {
             mach_error("mach_vm_read_overwrite", err);
             printf("Read error: %u\n", err);
+            [self release];
             return nil;
         }
         
