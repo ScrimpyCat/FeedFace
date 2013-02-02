@@ -9,6 +9,10 @@ It is currently a work in progress, so there's a lot of functionality that still
 
 I'm taking a rapid prototyping approach with how I'm developing it, so expect chunks of code to be removed/changed from time to time (this can introduce bugs, so expect them; because of the nature of the project you should expect bugs anyway) and for certain features to go untested.
 
+To-do:
+--
+Tasks can be found here: https://www.pivotaltracker.com/projects/741519/stories
+
 Installation:
 --
 Build the project and move the FeedFace.framework to your project or suggested framework installation directories (e.g. /Library/Frameworks or single user ~/Library/Frameworks).
