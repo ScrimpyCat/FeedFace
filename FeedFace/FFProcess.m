@@ -39,6 +39,7 @@
 #import "FFRegion.h"
 #import "FFImage.h"
 #import "FFClass.h"
+#import "FFThread.h"
 
 
 @implementation FFProcess
@@ -282,6 +283,33 @@
 {
     NSLog(@"Error: trying to use placeholder class or need to override in subclass");
     return nil;
+}
+
+-(NSArray*) threads
+{
+    thread_act_port_array_t Threads;
+    mach_msg_type_number_t Count;
+    mach_error_t err = task_threads(self.task, &Threads, &Count);
+    
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_threads", err);
+        printf("Task thread query error: %u\n", err);
+        
+        return nil;
+    }
+    
+    
+    NSMutableArray *Thr = [NSMutableArray arrayWithCapacity: Count];
+    for (size_t Loop = 0; Loop < Count; Loop++) [Thr addObject: [FFThread threadForThread: Threads[Loop] InProcess: self]];
+    
+    return Thr;
+}
+
+-(thread_state_flavor_t) threadStateKind
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return 0;
 }
 
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr

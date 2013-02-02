@@ -25,6 +25,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class FFProcess;
 @interface FFThread : NSObject
+
++(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc;
+
+-(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc;
+-(void) pause;
+-(void) resume;
+
+@property (nonatomic, readonly, assign) FFProcess *process;
+@property (nonatomic, readonly) thread_act_t threadAct;
+@property (nonatomic) mach_vm_address_t pc;
+@property (nonatomic, readonly) _Bool isRunning;
 
 @end

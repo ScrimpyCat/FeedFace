@@ -55,6 +55,8 @@
 -(NSString*) filePathForImageContainingAddress: (mach_vm_address_t)vmAddress; //override
 -(NSArray*) regions;
 -(NSArray*) images; //override
+-(NSArray*) threads;
+-(thread_state_flavor_t) threadStateKind;
 
 //convenient code
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr; //override

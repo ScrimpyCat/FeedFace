@@ -24,6 +24,7 @@
  */
 
 #import <FeedFace/FFProcess.h>
+#import <FeedFace/FFThread.h>
 #import <FeedFace/FFRegion.h>
 #import <FeedFace/NSValue+MachVMAddress.h>
 #import <FeedFace/NSObject+Injection.h>

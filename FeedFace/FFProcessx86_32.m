@@ -278,6 +278,11 @@
     return nil;
 }
 
+-(thread_state_flavor_t) threadStateKind
+{
+    return x86_THREAD_STATE32;
+}
+
 -(const class_rw_t32*) classRWOfClass: (mach_vm_address_t)address
 {
     const class_t32 *ClassT = [self dataAtAddress: address OfSize: sizeof(class_t32)].bytes;
