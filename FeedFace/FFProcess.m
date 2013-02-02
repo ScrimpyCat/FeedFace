@@ -328,6 +328,36 @@
     return nil;
 }
 
+-(void) terminate
+{
+    mach_error_t err = task_terminate(self.task);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_terminate", err);
+        printf("Task termination error: %u\n", err);
+    }
+}
+
+-(void) pause
+{
+    mach_error_t err = task_suspend(self.task);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_suspend", err);
+        printf("Task suspension error: %u\n", err);
+    }
+}
+
+-(void) resume
+{
+    mach_error_t err = task_resume(self.task);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_resume", err);
+        printf("Task resume error: %u\n", err);
+    }
+}
+
 -(NSString*) nameOfObject: (mach_vm_address_t)address
 {
     NSLog(@"Error: trying to use placeholder class or need to override in subclass");
