@@ -27,7 +27,7 @@ as "$INPUT_FILE_NAME" -o "$DERIVED_SOURCES_DIR/$INPUT_FILE_BASE.o" $(head -n 1 "
 #Would be better to not use ruby, but I'm not knowledgeable enough of how to do similar text processing with just the command line.
 #Also need to find out how to display errors from here to Xcode so it can display them
 ruby -e '
-code = ".test\n"
+code = ".text\n"
 bytes = ARGV[1].split("\n").map! { |i| i.split(" ").drop(1) }.flatten
 symbols = ARGV[0].split("\n")
 symbols.each_with_index { |sym, i|
