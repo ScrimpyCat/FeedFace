@@ -194,24 +194,34 @@
         return nil;
     }
     
+    static NSMutableSet * volatile Processes = nil;
+    if (!Processes)
+    {
+        if (OSAtomicCompareAndSwapPtrBarrier(nil, [NSMutableSet set], (void**)&Processes)) [Processes retain];
+    }
+    
+    FFProcess *Proc = nil;
     /* If ever a problem, use the sub type too, so can know what instructions exactly should be injected */
     if (DyldHeader.cputype == CPU_TYPE_I386)
     {
-        return [[FFProcessx86_32 alloc] initWithProcessIdentifier: thePid];
+        Proc = [[FFProcessx86_32 alloc] initWithProcessIdentifier: thePid];
     }
     
     else if (DyldHeader.cputype == CPU_TYPE_X86_64)
     {
-        return [[FFProcessx86_64 alloc] initWithProcessIdentifier: thePid];
+        Proc = [[FFProcessx86_64 alloc] initWithProcessIdentifier: thePid];
     }
     
+    FFProcess *Other = [Processes member: Proc];
+    if ((!Other) && (Proc)) [Processes addObject: Proc];
+    else Proc = Other;
     
-    return nil;
+    return Proc;
 }
 
 -(BOOL) isEqual: (id)object
 {
-    return ([self isKindOfClass: [object class]]) && (self.pid == ((FFProcess*)object).pid);
+    return ([object isKindOfClass: [FFProcess class]]) && (self.pid == ((FFProcess*)object).pid);
 }
 
 -(NSUInteger) hash
