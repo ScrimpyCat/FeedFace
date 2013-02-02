@@ -221,7 +221,7 @@
 
 -(BOOL) isEqual: (id)object
 {
-    return ([object isKindOfClass: [FFProcess class]]) && (self.pid == ((FFProcess*)object).pid);
+    return ([object isKindOfClass: [FFProcess class]]) && (self.pid == ((FFProcess*)object).pid) && ([self.path isEqualToString: ((FFProcess*)object).name]) && (self.cpuType == ((FFProcess*)object).cpuType); //The latter comparisons are to try to avoid the problem that if one process closes (yet instance is still active) and 2nd process has same pid (though unlikely as it needs to roll back), they will no longer be equal.
 }
 
 -(NSUInteger) hash
