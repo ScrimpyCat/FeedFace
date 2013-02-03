@@ -365,7 +365,7 @@
         [Thread pauseWhenNotExecutingInSet: set];
     }
     
-    [self pause];
+    [self pause]; //should check for error before suspending task.
 }
 
 -(void) resume
