@@ -24,6 +24,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <FeedFace/FFAddressSet.h>
 
 @class FFClass;
 @interface FFProcess : NSObject
@@ -64,6 +65,9 @@
 
 -(void) terminate;
 -(void) pause;
+-(void) pauseWithNoThreadsExecutingAtAddress: (mach_vm_address_t)address;
+-(void) pauseWithNoThreadsExecutingInRange: (FFAddressRange)range;
+-(void) pauseWithNoThreadsExecutingInSet: (FFAddressSet*)set;
 -(void) resume;
 
 //object inspection

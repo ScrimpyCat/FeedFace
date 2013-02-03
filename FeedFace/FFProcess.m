@@ -348,6 +348,26 @@
     }
 }
 
+-(void) pauseWithNoThreadsExecutingAtAddress: (mach_vm_address_t)address
+{
+    [self pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddress: address]];
+}
+
+-(void) pauseWithNoThreadsExecutingInRange: (FFAddressRange)range
+{
+    [self pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: range]];
+}
+
+-(void) pauseWithNoThreadsExecutingInSet: (FFAddressSet*)set
+{
+    for (FFThread *Thread in [self threads])
+    {
+        [Thread pauseWhenNotExecutingInSet: set];
+    }
+    
+    [self pause];
+}
+
 -(void) resume
 {
     mach_error_t err = task_resume(self.task);
