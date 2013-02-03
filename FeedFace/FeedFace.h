@@ -28,6 +28,7 @@
 #import <FeedFace/FFRegion.h>
 #import <FeedFace/NSValue+MachVMAddress.h>
 #import <FeedFace/NSObject+Injection.h>
+#import <FeedFace/FFAddressSet.h>
 #import <FeedFace/FFImage.h>
 #import <FeedFace/FFMemory.h>
 #import <FeedFace/FFInjector.h>
