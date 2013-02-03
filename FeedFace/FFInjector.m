@@ -316,13 +316,24 @@ static FFINJECTION DataInjectionDisabler = (FFINJECTION)^(FFDataInjector *Inject
 }
 
 static FFINJECTION CodecaveInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injector){
-    //pause process when pc outside of address
+    FFAddressRange Range = { Injector.address, Injector.address + [Injector.jumpCode length] };
+    [Injector.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: Range]];
     [Injector.process write: Injector.jumpCode ToAddress: Injector.address];
-    //resume
+    [Injector.process resume];
 };
 
-static FFINJECTION CodecaveInjectionDisabler = (FFINJECTION)^(FFCodeInjector *Injector){
+static FFINJECTION CodeInjectionDisabler = (FFINJECTION)^(FFCodeInjector *Injector){
+    FFAddressRange Range = { Injector.address, Injector.address + [Injector.originalData length] };
+    [Injector.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: Range]];
     [Injector.process write: Injector.originalData ToAddress: Injector.address];
+    [Injector.process resume];
+};
+
+static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injector){
+    FFAddressRange Range = { Injector.address, Injector.address + [Injector.data length] };
+    [Injector.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: Range]];
+    [Injector.process write: Injector.data ToAddress: Injector.address];
+    [Injector.process resume];
 };
 
 -(id) initWithInjectionData: (NSData*)theData AdditionalInfo: (NSDictionary*)info InProcess: (FFProcess*)proc
@@ -360,17 +371,10 @@ static FFINJECTION CodecaveInjectionDisabler = (FFINJECTION)^(FFCodeInjector *In
     
     if ((self = [super initWithInjectionData: theData AdditionalInfo: Info InProcess: proc]))
     {
-        if (isCodecave)
-        {
-            self.enabler = CodecaveInjectionEnabler;
-            self.disabler = CodecaveInjectionDisabler;
-        }
+        if (isCodecave) self.enabler = CodecaveInjectionEnabler;
+        else self.enabler = CodeInjectionEnabler; //inject code
         
-        else //inject code
-        {
-            self.enabler = DataInjectionEnabler;
-            self.disabler = DataInjectionDisabler;
-        }
+        self.disabler = CodeInjectionDisabler;
     }
     
     return self;
@@ -383,15 +387,18 @@ static FFINJECTION CodecaveInjectionDisabler = (FFINJECTION)^(FFCodeInjector *In
     
     if (isCodecave)
     {
-        //recursive pause (keeping pc out of code.address to code.address+code.size, and out of jumpCode)
         mach_vm_size_t MaxSizeJump;
         createJumpCode(0, 0, &MaxSizeJump);
-        const mach_vm_size_t CodeSize = NewLength + MaxSizeJump + [[self.process jumpCodeToAddress: 0 FromAddress: 0] length];
+        const mach_vm_size_t CodeSize = NewLength + MaxSizeJump;
         code.size = CodeSize;
         
-        self.jumpCode = createJumpCode(self.address, code.address, &MaxSizeJump);
-        
         mach_vm_address_t CodeAddr = code.address;
+        const mach_vm_address_t InjectionAddr = self.address;
+        
+        [self.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: (FFAddressRange){ CodeAddr, CodeAddr + CodeSize }]];
+        
+        self.jumpCode = createJumpCode(InjectionAddr, CodeAddr, &MaxSizeJump);
+        
         if (placement == CODE_PLACEMENT_OC)
         {
             [self.process write: self.originalData ToAddress: CodeAddr];
@@ -408,10 +415,10 @@ static FFINJECTION CodecaveInjectionDisabler = (FFINJECTION)^(FFCodeInjector *In
         }
         
         
-        retJump = [[self.process jumpCodeToAddress: self.address + [self.jumpCode length] FromAddress: code.address + CodeAddr] retain];
+        retJump = [[self.process jumpCodeToAddress: InjectionAddr + [self.jumpCode length] FromAddress: CodeAddr] retain];
         [self.process write: retJump ToAddress: CodeAddr];
         
-        //resume
+        [self.process resume];
     }
     
     else if (OldLength < NewLength)
