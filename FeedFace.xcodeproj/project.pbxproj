@@ -63,6 +63,8 @@
 		F373ACE516B7D4EA00F9CEAC /* ObjcOldRuntime32.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE416B7D4E900F9CEAC /* ObjcOldRuntime32.h */; };
 		F373ACE716B7D4F200F9CEAC /* ObjcOldRuntime64.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE616B7D4F200F9CEAC /* ObjcOldRuntime64.h */; };
 		F38FEBE51688AFF900F63E80 /* FFProcess+Reading.m in Sources */ = {isa = PBXBuildFile; fileRef = F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */; };
+		F39C9F8916BEA2A80040C053 /* FFAddressSet.h in Headers */ = {isa = PBXBuildFile; fileRef = F39C9F8716BEA2A80040C053 /* FFAddressSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F39C9F8A16BEA2A80040C053 /* FFAddressSet.m in Sources */ = {isa = PBXBuildFile; fileRef = F39C9F8816BEA2A80040C053 /* FFAddressSet.m */; };
 		F3C2AD7716AC1967009A66B0 /* FFInjector.h in Headers */ = {isa = PBXBuildFile; fileRef = F3C2AD7516AC1967009A66B0 /* FFInjector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F3C2AD7816AC1967009A66B0 /* FFInjector.m in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD7616AC1967009A66B0 /* FFInjector.m */; };
 		F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */; };
@@ -153,6 +155,8 @@
 		F373ACE416B7D4E900F9CEAC /* ObjcOldRuntime32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcOldRuntime32.h; sourceTree = "<group>"; };
 		F373ACE616B7D4F200F9CEAC /* ObjcOldRuntime64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcOldRuntime64.h; sourceTree = "<group>"; };
 		F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+Reading.m"; sourceTree = "<group>"; };
+		F39C9F8716BEA2A80040C053 /* FFAddressSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFAddressSet.h; sourceTree = "<group>"; };
+		F39C9F8816BEA2A80040C053 /* FFAddressSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFAddressSet.m; sourceTree = "<group>"; };
 		F3C2AD7516AC1967009A66B0 /* FFInjector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFInjector.h; sourceTree = "<group>"; };
 		F3C2AD7616AC1967009A66B0 /* FFInjector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFInjector.m; sourceTree = "<group>"; };
 		F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = x86_64JumpCode.gen.s; sourceTree = "<group>"; };
@@ -255,6 +259,8 @@
 				F30AF652168FD481003CC829 /* FFMemory.m */,
 				F361C6261699FCA800EE02EF /* NSObject+Injection.h */,
 				F361C6271699FCA800EE02EF /* NSObject+Injection.m */,
+				F39C9F8716BEA2A80040C053 /* FFAddressSet.h */,
+				F39C9F8816BEA2A80040C053 /* FFAddressSet.m */,
 				F3C2AD7516AC1967009A66B0 /* FFInjector.h */,
 				F3C2AD7616AC1967009A66B0 /* FFInjector.m */,
 				F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */,
@@ -359,6 +365,7 @@
 				F369A53816A1AF3700E92C44 /* FFProtocolOld.h in Headers */,
 				F3C2AD7716AC1967009A66B0 /* FFInjector.h in Headers */,
 				F3C2AD8116B1B2C3009A66B0 /* FFThread.h in Headers */,
+				F39C9F8916BEA2A80040C053 /* FFAddressSet.h in Headers */,
 				F30B941016798E7F003A1B01 /* FFProcessx86_32.h in Headers */,
 				F30B94191679E603003A1B01 /* FFProcessx86_64.h in Headers */,
 				F30B94311679F877003A1B01 /* FFProcessPrivate.h in Headers */,
@@ -467,6 +474,7 @@
 				F3C2AD7816AC1967009A66B0 /* FFInjector.m in Sources */,
 				F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */,
 				F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */,
+				F39C9F8A16BEA2A80040C053 /* FFAddressSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

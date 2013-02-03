@@ -137,6 +137,29 @@
     }
 }
 
+-(void) pauseWhenNotExecutingAtAddress: (mach_vm_address_t)address
+{
+    [self pauseWhenNotExecutingInSet: [FFAddressSet addressSetWithAddress: address]];
+}
+
+-(void) pauseWhenNotExecutingInRange: (FFAddressRange)range
+{
+    [self pauseWhenNotExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: range]];
+}
+
+-(void) pauseWhenNotExecutingInSet: (FFAddressSet*)set
+{
+    if (self.isRunning)
+    {
+        for (int Loop = 0; Loop < 100000; Loop++) //To avoid infinite loop
+        {
+            [self pause];
+            if (![set containsAddress: self.pc]) break;
+            [self resume];
+        }
+    }
+}
+
 -(void) resume
 {
     mach_error_t err = thread_resume(threadAct);

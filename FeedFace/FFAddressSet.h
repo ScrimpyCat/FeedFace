@@ -24,23 +24,24 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <FeedFace/FFAddressSet.h>
 
-@class FFProcess;
-@interface FFThread : NSObject
+typedef struct {
+    mach_vm_address_t start;
+    mach_vm_address_t end;
+} FFAddressRange;
 
-@property (nonatomic, readonly, assign) FFProcess *process;
-@property (nonatomic, readonly) thread_act_t threadAct;
-@property (nonatomic) mach_vm_address_t pc;
-@property (nonatomic, readonly) _Bool isRunning;
+@interface FFAddressSet : NSObject <NSCopying>
 
-+(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc;
++(id) addressSet;
++(id) addressSetWithAddress: (mach_vm_address_t)addr;
++(id) addressSetWithAddressesInRange: (FFAddressRange)range;
++(id) addressSetWithAddressSet: (FFAddressSet*)set;
 
--(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc;
--(void) pause;
--(void) pauseWhenNotExecutingAtAddress: (mach_vm_address_t)address;
--(void) pauseWhenNotExecutingInRange: (FFAddressRange)range;
--(void) pauseWhenNotExecutingInSet: (FFAddressSet*)set;
--(void) resume;
+-(id) initWithAddress: (mach_vm_address_t)addr;
+-(id) initWithAddressesInRange: (FFAddressRange)range;
+-(id) initWithAddressSet: (FFAddressSet*)set;
+-(void) addAddress: (mach_vm_address_t)addr;
+-(void) addAddressesInRange: (FFAddressRange)range;
+-(_Bool) containsAddress: (mach_vm_address_t)addr;
 
 @end
