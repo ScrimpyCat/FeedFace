@@ -59,7 +59,7 @@
             mach_error("mach_port_mod_refs", err);
             printf("Failed to increase references to thread act with error: %u\n", err);
             [self release];
-            return 0;
+            return nil;
         }
     }
     
