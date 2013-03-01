@@ -311,7 +311,13 @@
     
     
     NSMutableArray *Thr = [NSMutableArray arrayWithCapacity: Count];
-    for (size_t Loop = 0; Loop < Count; Loop++) [Thr addObject: [FFThread threadForThread: Threads[Loop] InProcess: self]];
+    for (size_t Loop = 0; Loop < Count; Loop++)
+    {
+        [Thr addObject: [FFThread threadForThread: Threads[Loop] InProcess: self]];
+        mach_port_deallocate(mach_task_self(), Threads[Loop]);
+    }
+    
+    mach_vm_deallocate(mach_task_self(), (mach_vm_address_t)Threads, sizeof(thread_act_t) * Count);
     
     return Thr;
 }

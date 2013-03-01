@@ -35,8 +35,9 @@
 @property (nonatomic, readonly) _Bool isRunning;
 
 +(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc;
++(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess *)proc ShouldDestroy: (_Bool)destroy;
 
--(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc;
+-(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc ShouldDestroy: (_Bool)destroy;
 -(void) pause;
 -(void) pauseWhenNotExecutingAtAddress: (mach_vm_address_t)address;
 -(void) pauseWhenNotExecutingInRange: (FFAddressRange)range;

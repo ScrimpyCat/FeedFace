@@ -29,19 +29,38 @@
 #import <mach/mach.h>
 
 @implementation FFThread
+{
+    _Bool shouldDestroy;
+}
+
 @synthesize process, threadAct;
 
 +(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc
 {
-    return [[[FFThread alloc] initWithThread: threadAct InProcess: proc] autorelease];
+    return [[[FFThread alloc] initWithThread: threadAct InProcess: proc ShouldDestroy: NO] autorelease];
 }
 
--(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc
++(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess *)proc ShouldDestroy: (_Bool)destroy
+{
+    return [[[FFThread alloc] initWithThread: threadAct InProcess: proc ShouldDestroy: destroy] autorelease];
+}
+
+-(id) initWithThread: (thread_act_t)thread InProcess: (FFProcess*)proc ShouldDestroy: (_Bool)destroy
 {
     if ((self = [super init]))
     {
         process = proc;
         threadAct = thread;
+        shouldDestroy = destroy;
+        
+        mach_error_t err = mach_port_mod_refs(mach_task_self(), thread, MACH_PORT_RIGHT_SEND, 1);
+        if (err != KERN_SUCCESS)
+        {
+            mach_error("mach_port_mod_refs", err);
+            printf("Failed to increase references to thread act with error: %u\n", err);
+            [self release];
+            return 0;
+        }
     }
     
     return self;
@@ -168,6 +187,14 @@
         mach_error("thread_resume", err);
         printf("Failed to resume thread: %u\n", err);
     }
+}
+
+-(void) dealloc
+{
+    if (shouldDestroy) thread_terminate(threadAct); //unsure if this will destroy send port rights or not    
+    mach_port_deallocate(mach_task_self(), threadAct);
+    
+    [super dealloc];
 }
 
 @end
