@@ -340,4 +340,6 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
         
         else SectionLoadCommand += data->cmdsize;
     }, NULL);
+    
+    return SectionName;
 }
