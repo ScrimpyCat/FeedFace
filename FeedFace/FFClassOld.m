@@ -72,14 +72,16 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
     NSMutableArray *Methods = [NSMutableArray array];
     
     mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, methodLists);
+    mach_vm_address_t MethodList = [self.process addressAtAddress: Address];
+    const size_t MethodSize = self.process.is64? sizeof(old_method64) : sizeof(old_method32);
+    
     if (self.methodListIsNotArray)
     {
-        const mach_vm_address_t List = [self.process addressAtAddress: Address];
+        const mach_vm_address_t List = MethodList;
         const uint32_t *MethodCount = [self.process dataAtAddress: List + PROC_OFFSET_OF(old_method_list, method_count) OfSize: sizeof(uint32_t)].bytes;
         if (!MethodCount) return nil;
         
         const mach_vm_address_t CurrentMethod = List + PROC_OFFSET_OF(old_method_list, method_list);
-        const size_t MethodSize = self.process.is64? sizeof(old_method64) : sizeof(old_method32);
         for (size_t Loop = 0, Count = *MethodCount; Loop < Count; Loop++)
         {
             [Methods addObject: [FFMethod methodAtAddress: CurrentMethod + (Loop * MethodSize) InProcess: self.process]];
@@ -88,7 +90,19 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
     
     else
     {
-          
+        const size_t PointerSize = self.process.is64? sizeof(uint64_t) : sizeof(uint32_t);
+        for (mach_vm_address_t ListAddr; (ListAddr = [self.process addressAtAddress: MethodList]); MethodList += PointerSize)
+        {
+            const mach_vm_address_t List = [self.process addressAtAddress: MethodList];
+            const uint32_t *MethodCount = [self.process dataAtAddress: List + PROC_OFFSET_OF(old_method_list, method_count) OfSize: sizeof(uint32_t)].bytes;
+            if (!MethodCount) continue;
+            
+            const mach_vm_address_t CurrentMethod = List + PROC_OFFSET_OF(old_method_list, method_list);
+            for (size_t Loop = 0, Count = *MethodCount; Loop < Count; Loop++)
+            {
+                [Methods addObject: [FFMethod methodAtAddress: CurrentMethod + (Loop * MethodSize) InProcess: self.process]];
+            }
+        }
     }
     
     
