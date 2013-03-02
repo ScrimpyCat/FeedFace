@@ -206,7 +206,7 @@ static mach_vm_address_t FindClosestAddressInArray(NSArray *Array, mach_vm_addre
         NSData *ClassListData = [self dataForSegment: @"__OBJC" Section: @"__symbols" InImage: self.name];
         if (self.is64)
         {
-            const struct objc_symtab32 {
+            const struct objc_symtab64 {
                 uint32_t sel_ref_cnt;
                 uint64_t refs;
                 uint16_t cls_def_cnt;
