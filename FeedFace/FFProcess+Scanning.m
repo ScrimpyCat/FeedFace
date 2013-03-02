@@ -203,18 +203,38 @@ static mach_vm_address_t FindClosestAddressInArray(NSArray *Array, mach_vm_addre
     
     else
     {
-        /*
-         Should use __OBJC,__symbols which corresponds to the objc_symtab structure:
-         struct objc_symtab {
-            unsigned long sel_ref_cnt          
-            SEL *refs                          
-            unsigned short cls_def_cnt         
-            unsigned short cat_def_cnt         
-            void *defs[1] / variable size /
-         }
-         
-         So loop through defs for cls_def_cnt
-         */
+        NSData *ClassListData = [self dataForSegment: @"__OBJC" Section: @"__symbols" InImage: self.name];
+        if (self.is64)
+        {
+            const struct objc_symtab32 {
+                uint32_t sel_ref_cnt;
+                uint64_t refs;
+                uint16_t cls_def_cnt;
+                uint16_t cat_def_cnt;
+                uint64_t defs;
+            } *Symtab = ClassListData.bytes;
+            
+            for (int Loop = 0; Loop < Symtab->cls_def_cnt; Loop++)
+            {
+                [ClassList addObject: [NSValue valueWithAddress: ((uint64_t*)&Symtab->defs)[Loop]]];
+            }
+        }
+        
+        else
+        {
+            const struct objc_symtab32 {
+                uint32_t sel_ref_cnt;
+                uint32_t refs;
+                uint16_t cls_def_cnt;
+                uint16_t cat_def_cnt;
+                uint32_t defs;
+            } *Symtab = ClassListData.bytes;
+            
+            for (int Loop = 0; Loop < Symtab->cls_def_cnt; Loop++)
+            {
+                [ClassList addObject: [NSValue valueWithAddress: ((uint32_t*)&Symtab->defs)[Loop]]];
+            }
+        }
     }
     
     return ClassList;
@@ -224,33 +244,24 @@ static mach_vm_address_t FindClosestAddressInArray(NSArray *Array, mach_vm_addre
 {
     NSMutableArray *ClassList = [NSMutableArray array];
     
-    if (self.usesNewRuntime)
+    
+    NSData *ClassListData = self.usesNewRuntime? [self dataForSegment: @"__DATA" Section: @"__objc_classrefs" InImage: self.name] : [self dataForSegment: @"__OBJC" Section: @"__cls_refs" InImage: self.name];
+    if (self.is64)
     {
-        NSData *ClassListData = [self dataForSegment: @"__DATA" Section: @"__objc_classrefs" InImage: self.name];
-        if (self.is64)
+        const uint64_t *Classes = ClassListData.bytes;
+        for (NSUInteger Loop = 0, Count = [ClassListData length] / sizeof(uint64_t); Loop < Count; Loop++)
         {
-            const uint64_t *Classes = ClassListData.bytes;
-            for (NSUInteger Loop = 0, Count = [ClassListData length] / sizeof(uint64_t); Loop < Count; Loop++)
-            {
-                [ClassList addObject: [NSValue valueWithAddress: Classes[Loop]]];
-            }
-        }
-        
-        else
-        {
-            const uint32_t *Classes = ClassListData.bytes;
-            for (NSUInteger Loop = 0, Count = [ClassListData length] / sizeof(uint32_t); Loop < Count; Loop++)
-            {
-                [ClassList addObject: [NSValue valueWithAddress: Classes[Loop]]];
-            }
+            [ClassList addObject: [NSValue valueWithAddress: Classes[Loop]]];
         }
     }
     
     else
     {
-        /*
-         Use __OBJC,__cls_refs
-         */
+        const uint32_t *Classes = ClassListData.bytes;
+        for (NSUInteger Loop = 0, Count = [ClassListData length] / sizeof(uint32_t); Loop < Count; Loop++)
+        {
+            [ClassList addObject: [NSValue valueWithAddress: Classes[Loop]]];
+        }
     }
     
     return ClassList;
