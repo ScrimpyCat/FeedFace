@@ -64,10 +64,11 @@
 
 +(NSString*) nameOfProcessWithIdentifier: (pid_t)pid
 {
-    char ProcName[PROC_PIDPATHINFO_MAXSIZE];
-    if (!proc_name(pid, ProcName, sizeof(ProcName))) return nil;
-    
-    return [NSString stringWithUTF8String: ProcName];
+    /*
+     proc_name uses proc_bsdinfo so only has room for MAXCOMLEN (16) of the process name. While this will work, it assumes process name hasn't been
+     changed.
+     */
+    return [[FFProcess pathOfProcessWithIdentifier: pid] lastPathComponent];
 }
 
 +(NSString*) pathOfProcessWithIdentifier: (pid_t)pid
