@@ -170,7 +170,15 @@
 
 -(mach_vm_address_t) relocateAddress: (mach_vm_address_t)address InImage: (NSString*)image
 {
-    return address + ([self loadAddressForImage: image] & ~(uint32_t)0x1fff);
+    const mach_vm_address_t ImageLoadAddress = [self loadAddressForImage: image];
+    
+    __block mach_vm_address_t Slide;
+    FFImageInProcess(self, ImageLoadAddress, (FFIMAGE_ACTION)^(struct mach_header *data){
+        if (data->flags & MH_PIE) Slide = 0x1000;
+        else Slide = 0;
+    }, NULL, NULL);
+    
+    return address + (ImageLoadAddress - Slide);
 }
 
 -(NSArray*) images
