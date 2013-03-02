@@ -38,9 +38,9 @@ typedef struct old_class32 {
     uint32_t /*struct old_class * */ isa;
     uint32_t /*struct old_class * */ super_class;
     uint32_t /*const char * */ name;
-    long version;
-    long info;
-    long instance_size;
+    uint32_t /*long */ version;
+    uint32_t /*long */ info;
+    uint32_t /*long */ instance_size;
     uint32_t /*struct old_ivar_list * */ ivars;
     uint32_t /*struct old_method_list ** */ methodLists;
     uint32_t /*Cache */ cache;
@@ -50,12 +50,25 @@ typedef struct old_class32 {
     uint32_t /*struct old_class_ext * */ ext;
 } old_class32;
 
+typedef struct old_class_ext32 {
+    uint32_t size;
+    uint32_t /*const uint8_t * */ weak_ivar_layout;
+    uint32_t /*struct old_property_list ** */ propertyLists;
+} old_class_ext32;
+
 //Ivar
 typedef struct old_ivar32 {
     uint32_t /*char * */ ivar_name;
     uint32_t /*char * */ ivar_type;
-    int ivar_offset;
+    uint32_t /*int */ ivar_offset;
 } old_ivar32;
+
+typedef struct old_ivar_list32 {
+    uint32_t /*int */ ivar_count;
+    
+    /* variable length structure */
+    uint32_t /*struct old_ivar */ ivar_list[1];
+} old_ivar_list32;
 
 //Protocol
 typedef struct old_protocol32 {

@@ -59,7 +59,7 @@
 		F369A53516A1AF2800E92C44 /* FFIvarOld.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A53316A1AF2800E92C44 /* FFIvarOld.m */; };
 		F369A53816A1AF3700E92C44 /* FFProtocolOld.h in Headers */ = {isa = PBXBuildFile; fileRef = F369A53616A1AF3700E92C44 /* FFProtocolOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F369A53916A1AF3700E92C44 /* FFProtocolOld.m in Sources */ = {isa = PBXBuildFile; fileRef = F369A53716A1AF3700E92C44 /* FFProtocolOld.m */; };
-		F373ACE316B7D4D700F9CEAC /* ObjcOldRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE216B7D4D700F9CEAC /* ObjcOldRuntime.h */; };
+		F373ACE316B7D4D700F9CEAC /* ObjcOldRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE216B7D4D700F9CEAC /* ObjcOldRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F373ACE516B7D4EA00F9CEAC /* ObjcOldRuntime32.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE416B7D4E900F9CEAC /* ObjcOldRuntime32.h */; };
 		F373ACE716B7D4F200F9CEAC /* ObjcOldRuntime64.h in Headers */ = {isa = PBXBuildFile; fileRef = F373ACE616B7D4F200F9CEAC /* ObjcOldRuntime64.h */; };
 		F38FEBE51688AFF900F63E80 /* FFProcess+Reading.m in Sources */ = {isa = PBXBuildFile; fileRef = F38FEBE31688AFF900F63E80 /* FFProcess+Reading.m */; };
@@ -366,6 +366,7 @@
 				F3C2AD7716AC1967009A66B0 /* FFInjector.h in Headers */,
 				F3C2AD8116B1B2C3009A66B0 /* FFThread.h in Headers */,
 				F39C9F8916BEA2A80040C053 /* FFAddressSet.h in Headers */,
+				F373ACE316B7D4D700F9CEAC /* ObjcOldRuntime.h in Headers */,
 				F30B941016798E7F003A1B01 /* FFProcessx86_32.h in Headers */,
 				F30B94191679E603003A1B01 /* FFProcessx86_64.h in Headers */,
 				F30B94311679F877003A1B01 /* FFProcessPrivate.h in Headers */,
@@ -376,7 +377,6 @@
 				F361C6231699D28300EE02EF /* ObjcCache32.h in Headers */,
 				F361C6251699D28B00EE02EF /* ObjcCache64.h in Headers */,
 				F361C62B169B101200EE02EF /* PropertyImpMacros.h in Headers */,
-				F373ACE316B7D4D700F9CEAC /* ObjcOldRuntime.h in Headers */,
 				F373ACE516B7D4EA00F9CEAC /* ObjcOldRuntime32.h in Headers */,
 				F373ACE716B7D4F200F9CEAC /* ObjcOldRuntime64.h in Headers */,
 			);

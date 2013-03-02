@@ -34,10 +34,13 @@
 #import <FeedFace/FFInjector.h>
 #import <FeedFace/FFClass.h>
 #import <FeedFace/FFClassNew.h>
+#import <FeedFace/FFClassOld.h>
 #import <FeedFace/FFMethod.h>
 #import <FeedFace/FFCache.h>
 #import <FeedFace/FFProperty.h>
 #import <FeedFace/FFProtocol.h>
 #import <FeedFace/FFProtocolNew.h>
+#import <FeedFace/FFProtocolOld.h>
 #import <FeedFace/FFIvar.h>
 #import <FeedFace/FFIvarNew.h>
+#import <FeedFace/FFIvarOld.h>

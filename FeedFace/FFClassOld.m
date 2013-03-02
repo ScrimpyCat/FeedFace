@@ -24,7 +24,235 @@
  */
 
 #import "FFClassOld.h"
+#import "ObjcOldRuntime32.h"
+#import "ObjcOldRuntime64.h"
+#import "FFProcess.h"
+#import "FFMemory.h"
+#import "FFCache.h"
+
+#import "PropertyImpMacros.h"
 
 @implementation FFClassOld
+{
+    FFMemory *nameData;
+    FFMemory *ivarLayoutData, *weakIvarLayoutData;
+}
+
+#define ADDRESS_IN_CLASS(member) Address = self.address + PROC_OFFSET_OF(old_class, member);
+#define ADDRESS_IN_CLASS_EXT(member) \
+if (!self.hasExtension) goto Failure; \
+Address = self.ext;
+
+
+POINTER_TYPE_PROPERTY(FFClassOld, isa, setIsa, ADDRESS_IN_CLASS(isa))
+POINTER_TYPE_PROPERTY(FFClassOld, superclass, setSuperclass, ADDRESS_IN_CLASS(super_class))
+STRING_TYPE_PROPERTY(name, setName, ADDRESS_IN_CLASS(name))
+/*
+ The following 3 have type long, but should only be applied in 32 bit processes. So unless old runtime is introduced into 64 bit than no need to worry.
+ If that does happen than will need to re-implement the following but still cast back to uint32_t from uint64_t (on 64 bit).
+ */
+
+DIRECT_TYPE_PROPERTY(uint32_t, version, setVersion, ADDRESS_IN_CLASS(version))
+DIRECT_TYPE_PROPERTY(uint32_t, info, setInfo, ADDRESS_IN_CLASS(info))
+DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(instance_size))
+
+-(NSArray*) ivars
+{
+    return nil;
+}
+
+-(void) setIvars: (NSArray*)ivars
+{
+    
+}
+
+-(NSArray*) methods
+{
+    return nil;
+}
+
+-(void) setMethods: (NSArray*)methods
+{
+    
+}
+
+POINTER_TYPE_PROPERTY(FFCache, cache, setCache, ADDRESS_IN_CLASS(cache))
+
+-(NSArray*) protocols
+{
+    return nil;
+}
+
+-(void) setProtocols: (NSArray*)protocols
+{
+    
+}
+
+// CLS_EXT only
+-(NSArray*) ivarLayout
+{
+    if (!self.hasExtension) return nil;
+    mach_vm_address_t IvarLayoutAddr = [self.process addressAtAddress: self.address + PROC_OFFSET_OF(old_class, ivar_layout)];
+    NSMutableArray *IvarLayout = nil;
+    if (IvarLayoutAddr)
+    {
+        IvarLayout = [NSMutableArray array];
+        for (const uint8_t *Layout; (Layout = [self.process dataAtAddress: IvarLayoutAddr OfSize: sizeof(uint8_t)].bytes) && (*Layout); IvarLayoutAddr += sizeof(uint8_t)) [IvarLayout addObject: [NSNumber numberWithUnsignedChar: *Layout]]; //later optimize it to do it in batches
+    }
+    
+    return IvarLayout;
+}
+
+-(void) setIvarLayout: (NSArray*)ivarLayout
+{
+    if (!self.hasExtension) return;
+    mach_vm_address_t IvarLayoutAddr = 0;
+    if (ivarLayout)
+    {
+        NSUInteger Size = [ivarLayout count] + 1;
+        if (!ivarLayoutData) ivarLayoutData = [FFMemory allocateInProcess: self.process WithSize: Size];
+        else ivarLayoutData.size = Size;
+        
+        NSUInteger Index = 0;
+        const mach_vm_address_t Addr = ivarLayoutData.address;
+        for (NSNumber *Val in ivarLayout)
+        {
+            [self.process writeData: &(uint8_t){ [Val unsignedCharValue] } OfSize: sizeof(uint8_t) ToAddress: Addr + Index++];
+        }
+        
+        [self.process writeData: &(uint8_t){ 0 } OfSize: sizeof(uint8_t) ToAddress: Addr + Index];
+        IvarLayoutAddr = Addr;
+    }
+    
+    [self.process writeAddress: IvarLayoutAddr ToAddress: self.address + PROC_OFFSET_OF(old_class, ivar_layout)];
+}
+
+ADDRESS_TYPE_PROPERTY(ext, setExt, 
+                      if (!self.hasExtension) goto Failure;
+                      ADDRESS_IN_CLASS(ext);)
+DIRECT_TYPE_PROPERTY(uint32_t, size, setSize, ADDRESS_IN_CLASS_EXT(size))
+
+-(NSArray*) weakIvarLayout
+{
+    if (!self.hasExtension) return nil;
+    mach_vm_address_t IvarLayoutAddr = [self.process addressAtAddress: self.ext];
+    NSMutableArray *IvarLayout = nil;
+    if (IvarLayoutAddr)
+    {
+        IvarLayout = [NSMutableArray array];
+        for (const uint8_t *Layout; (Layout = [self.process dataAtAddress: IvarLayoutAddr OfSize: sizeof(uint8_t)].bytes) && (*Layout); IvarLayoutAddr += sizeof(uint8_t)) [IvarLayout addObject: [NSNumber numberWithUnsignedChar: *Layout]]; //later optimize it to do it in batches
+    }
+    
+    return IvarLayout;
+}
+
+-(void) setWeakIvarLayout: (NSArray*)ivarLayout
+{
+    if (!self.hasExtension) return;
+    mach_vm_address_t IvarLayoutAddr = 0;
+    if (ivarLayout)
+    {
+        NSUInteger Size = [ivarLayout count] + 1;
+        if (!weakIvarLayoutData) weakIvarLayoutData = [FFMemory allocateInProcess: self.process WithSize: Size];
+        else weakIvarLayoutData.size = Size;
+        
+        NSUInteger Index = 0;
+        const mach_vm_address_t Addr = weakIvarLayoutData.address;
+        for (NSNumber *Val in ivarLayout)
+        {
+            [self.process writeData: &(uint8_t){ [Val unsignedCharValue] } OfSize: sizeof(uint8_t) ToAddress: Addr + Index++];
+        }
+        
+        [self.process writeData: &(uint8_t){ 0 } OfSize: sizeof(uint8_t) ToAddress: Addr + Index];
+        IvarLayoutAddr = Addr;
+    }
+    
+    [self.process writeAddress: IvarLayoutAddr ToAddress: self.ext];
+}
+
+-(NSArray*) properties
+{
+    if (!self.hasExtension) return nil;
+    
+    return nil;
+}
+
+-(void) setProperties: (NSArray*)properties
+{
+    if (!self.hasExtension) return;
+}
+
+#define SINGLE_FLAG_TYPE_PROPERTY(getter, setter, flagProperty, flag) \
+-(_Bool) getter \
+{ \
+return self.flagProperty & flag; \
+} \
+\
+-(void) setter: (_Bool)getter \
+{ \
+const uint32_t Flags = self.flagProperty & ~flag; \
+self.flagProperty = Flags | (getter? flag : 0); \
+}
+
+SINGLE_FLAG_TYPE_PROPERTY(isMetaClass, setIsMetaClass, info, CLS_META)
+SINGLE_FLAG_TYPE_PROPERTY(hasCxxStructors, setHasCxxStructors, info, CLS_HAS_CXX_STRUCTORS)
+SINGLE_FLAG_TYPE_PROPERTY(isHidden, setIsHidden, info, CLS_HIDDEN) //conflicts with certain versions where CLS_EXT had same value
+SINGLE_FLAG_TYPE_PROPERTY(isBundleClass, setIsBundleClass, info, CLS_FROM_BUNDLE)
+SINGLE_FLAG_TYPE_PROPERTY(isInitialized, setIsInitialized, info, CLS_INITIALIZED)
+SINGLE_FLAG_TYPE_PROPERTY(isInitializing, setIsInitializing, info, CLS_INITIALIZING)
+SINGLE_FLAG_TYPE_PROPERTY(isConstructed, setIsConstructed, info, CLS_CONSTRUCTED)
+SINGLE_FLAG_TYPE_PROPERTY(isConstructing, setIsConstructing, info, CLS_CONSTRUCTING)
+SINGLE_FLAG_TYPE_PROPERTY(shouldFinalizeOnMainThread, setShouldFinalizeOnMainThread, info, CLS_FINALIZE_ON_MAIN_THREAD)
+SINGLE_FLAG_TYPE_PROPERTY(isLoaded, setIsLoaded, info, CLS_LOADED)
+SINGLE_FLAG_TYPE_PROPERTY(instancesHaveAssociatedObjects, setInstancesHaveAssociatedObjects, info, CLS_INSTANCES_HAVE_ASSOCIATED_OBJECTS)
+SINGLE_FLAG_TYPE_PROPERTY(instancesHaveSpecificLayout, setInstancesHaveSpecificLayout, info, CLS_HAS_INSTANCE_SPECIFIC_LAYOUT)
+SINGLE_FLAG_TYPE_PROPERTY(isClass, setIsClass, info, CLS_CLASS)
+SINGLE_FLAG_TYPE_PROPERTY(isPosing, setIsPosing, info, CLS_POSING)
+SINGLE_FLAG_TYPE_PROPERTY(isMapped, setIsMapped, info, CLS_MAPPED)
+SINGLE_FLAG_TYPE_PROPERTY(flushCache, setFlushCache, info, CLS_FLUSH_CACHE)
+SINGLE_FLAG_TYPE_PROPERTY(growCache, setGrowCache, info, CLS_GROW_CACHE)
+SINGLE_FLAG_TYPE_PROPERTY(needsBind, setNeedsBind, info, CLS_NEED_BIND)
+SINGLE_FLAG_TYPE_PROPERTY(methodListIsArray, setMethodListIsArray, info, CLS_METHOD_ARRAY)
+SINGLE_FLAG_TYPE_PROPERTY(isJavaHybrid, setIsJavaHybrid, info, CLS_JAVA_HYBRID)
+SINGLE_FLAG_TYPE_PROPERTY(isJavaClass, setIsJavaClass, info, CLS_JAVA_CLASS)
+SINGLE_FLAG_TYPE_PROPERTY(methodListIsNotArray, setMethodListIsNotArray, info, CLS_NO_METHOD_ARRAY) //methodLists is NULL or single list
+SINGLE_FLAG_TYPE_PROPERTY(hasLoadMethod, setHasLoadMethod, info, CLS_HAS_LOAD_METHOD)
+SINGLE_FLAG_TYPE_PROPERTY(propertyListIsNotArray, setPropertyListIsNotArray, info, CLS_NO_PROPERTY_ARRAY) //propertyLists is NULL or single list
+SINGLE_FLAG_TYPE_PROPERTY(isConnected, setIsConnected, info, CLS_CONNECTED)
+SINGLE_FLAG_TYPE_PROPERTY(isLeaf, setIsLeaf, info, CLS_LEAF)
+
+-(_Bool) isRootClass
+{
+    return self.superclass == nil || [self isEqual: self.superclass];
+}
+
+-(void) setIsRootClass: (_Bool)isRootClass {}
+
+-(_Bool) hasExtension
+{
+    if (self.version >= 6)
+    {
+        return self.isHidden;
+    }
+    
+    return NO;
+}
+
+-(void) setHasExtension: (_Bool)hasExtension
+{
+    if (self.version >= 6)
+    {
+        self.isHidden = hasExtension;
+    }
+}
+
+-(void) dealloc
+{
+    [nameData release]; nameData = nil;
+    [ivarLayoutData release]; ivarLayoutData = nil;
+    [weakIvarLayoutData release]; weakIvarLayoutData = nil;
+    
+    [super dealloc];
+}
 
 @end

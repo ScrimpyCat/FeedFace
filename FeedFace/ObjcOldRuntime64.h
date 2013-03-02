@@ -38,9 +38,9 @@ typedef struct old_class64 {
     uint64_t /*struct old_class * */ isa;
     uint64_t /*struct old_class * */ super_class;
     uint64_t /*const char * */ name;
-    long version;
-    long info;
-    long instance_size;
+    uint64_t /*long */ version;
+    uint64_t /*long */ info;
+    uint64_t /*long */ instance_size;
     uint64_t /*struct old_ivar_list * */ ivars;
     uint64_t /*struct old_method_list ** */ methodLists;
     uint64_t /*Cache */ cache;
@@ -50,14 +50,27 @@ typedef struct old_class64 {
     uint64_t /*struct old_class_ext * */ ext;
 } old_class64;
 
+typedef struct old_class_ext64 {
+    uint32_t size;
+    uint32_t /*const uint8_t * */ weak_ivar_layout;
+    uint32_t /*struct old_property_list ** */ propertyLists;
+} old_class_ext64;
+
 //Ivar
 typedef struct old_ivar64 {
     uint64_t /*char * */ ivar_name;
     uint64_t /*char * */ ivar_type;
-    int ivar_offset;
+    uint32_t /*int */ ivar_offset;
 
-    int space;
+    uint32_t /*int */ space;
 } old_ivar64;
+
+typedef struct old_ivar_list64 {
+    uint32_t /*int */ ivar_count;
+    uint32_t space;
+    /* variable length structure */
+    uint64_t /*struct old_ivar */ ivar_list[1];
+} old_ivar_list64;
 
 //Protocol
 typedef struct old_protocol64 {
