@@ -170,7 +170,6 @@
 
 -(mach_vm_address_t) relocateAddress: (mach_vm_address_t)address InImage: (NSString*)image
 {
-    printf("%#llx : %#llx\n", address, [self loadAddressForImage: image]);
     return address + ([self loadAddressForImage: image] & ~(uint32_t)0x1fff);
 }
 
