@@ -69,7 +69,7 @@ typedef struct old_ivar_list64 {
     uint32_t /*int */ ivar_count;
     uint32_t space;
     /* variable length structure */
-    uint64_t /*struct old_ivar */ ivar_list[1];
+    uint64_t /*struct old_ivar */ ivar_list/*[1]*/;
 } old_ivar_list64;
 
 //Protocol
@@ -80,3 +80,21 @@ typedef struct old_protocol64 {
     uint64_t /*struct objc_method_description_list * */ instance_methods;
     uint64_t /*struct objc_method_description_list * */ class_methods;
 } old_protocol64;
+
+//Method
+typedef struct old_method64 {
+    uint64_t /*SEL */ method_name;
+    uint64_t /*char * */ method_types;
+    uint64_t /*IMP */ method_imp;
+} old_method64;
+
+typedef struct old_method_list64 {
+    uint64_t /*struct old_method_list * */ obsolete;
+    
+    uint32_t /*int */ method_count;
+    
+    uint32_t /*int */ space;
+    
+    /* variable length structure */
+    uint64_t /*struct old_method */ method_list/*[1]*/;
+} old_method_list64;

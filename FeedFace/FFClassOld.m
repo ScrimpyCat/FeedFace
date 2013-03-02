@@ -29,6 +29,7 @@
 #import "FFProcess.h"
 #import "FFMemory.h"
 #import "FFCache.h"
+#import "FFMethod.h"
 
 #import "PropertyImpMacros.h"
 
@@ -68,7 +69,30 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
 
 -(NSArray*) methods
 {
-    return nil;
+    NSMutableArray *Methods = [NSMutableArray array];
+    
+    mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, methodLists);
+    if (self.methodListIsNotArray)
+    {
+        const mach_vm_address_t List = [self.process addressAtAddress: Address];
+        const uint32_t *MethodCount = [self.process dataAtAddress: List + PROC_OFFSET_OF(old_method_list, method_count) OfSize: sizeof(uint32_t)].bytes;
+        if (!MethodCount) return nil;
+        
+        const mach_vm_address_t CurrentMethod = List + PROC_OFFSET_OF(old_method_list, method_list);
+        const size_t MethodSize = self.process.is64? sizeof(old_method64) : sizeof(old_method32);
+        for (size_t Loop = 0, Count = *MethodCount; Loop < Count; Loop++)
+        {
+            [Methods addObject: [FFMethod methodAtAddress: CurrentMethod + (Loop * MethodSize) InProcess: self.process]];
+        }
+    }
+    
+    else
+    {
+          
+    }
+    
+    
+    return Methods;
 }
 
 -(void) setMethods: (NSArray*)methods
