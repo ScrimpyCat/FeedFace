@@ -88,20 +88,18 @@
             return nil;
         }
         
-        mach_vm_size_t ReadSize;
+        
         size_t ImageInfosSize = dyldInfo.all_image_info_size;
         if (sizeof(imageInfos) < ImageInfosSize) ImageInfosSize = sizeof(imageInfos); //Later version being used. If needing new elements add them.
         
-        err = mach_vm_read_overwrite(self.task, dyldInfo.all_image_info_addr, ImageInfosSize, (mach_vm_address_t)&imageInfos, &ReadSize);
-        
-        if (err != KERN_SUCCESS)
+        const void *AllImageInfoAddress = [self dataAtAddress: dyldInfo.all_image_info_addr OfSize: ImageInfosSize].bytes;
+        if (!AllImageInfoAddress)
         {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
             [self release];
             return nil;
         }
         
+        memcpy(&imageInfos, AllImageInfoAddress, ImageInfosSize);
         
         self.usesNewRuntime = ![[self findSegment: @"__OBJC"] count];
     }
@@ -111,61 +109,34 @@
 
 -(mach_vm_address_t) loadAddressForImage: (NSString*)image
 {
-    struct dyld_image_info64 ImageInfo;
+    mach_vm_address_t ImageLoadAddress = 0;
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
-    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(ImageInfo);
+    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info64);
     
-    mach_vm_size_t ReadSize;
     if (image)
     {
         _Bool Match = FALSE;
         for (uint32_t Loop = 0; (Loop < InfoArrayCount) && (!Match); Loop++)
         {
-            mach_error_t err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)), ImageInfoSize, (mach_vm_address_t)&ImageInfo, &ReadSize);
-            
-            if (err != KERN_SUCCESS)
+            const struct dyld_image_info64 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
+            if (ImageInfo)
             {
-                mach_error("mach_vm_read_overwrite", err);
-                printf("Read error: %u\n", err);
-                return 0;
+                Match = FFImagePathMatch(image, [self nullTerminatedStringAtAddress: ImageInfo->imageFilePath]);
+                if (Match) ImageLoadAddress = ImageInfo->imageLoadAddress;
             }
-            
-            
-            char FilePath[PATH_MAX];
-            err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)ImageInfo.imageFilePath, sizeof(FilePath), (mach_vm_address_t)FilePath, &ReadSize);
-            
-            if (err != KERN_SUCCESS)
-            {
-                mach_error("mach_vm_read_overwrite", err);
-                printf("Read error: %u\n", err);
-                return 0;
-            }
-            
-            
-            Match = FFImagePathMatch(image, [NSString stringWithUTF8String: FilePath]);
         }
         
-        if (!Match)
-        {
-            printf("Could not find image: %s\n", [image UTF8String]);
-            return 0;
-        }
+        if (!Match) printf("Could not find image: %s\n", [image UTF8String]);
     }
     
     else
     {
         //Assumes first element in info array is the app itself.
-        mach_error_t err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)InfoArray, ImageInfoSize, (mach_vm_address_t)&ImageInfo, &ReadSize);
-        
-        if (err != KERN_SUCCESS)
-        {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
-            return 0;
-        }
+        const struct dyld_image_info64 *ImageInfo = [self dataAtAddress: InfoArray OfSize: ImageInfoSize].bytes;
+        if (ImageInfo) ImageLoadAddress = ImageInfo->imageLoadAddress;
     }
     
-    return (mach_vm_address_t)ImageInfo.imageLoadAddress;
+    return ImageLoadAddress;
 }
 
 -(mach_vm_address_t) relocateAddress: (mach_vm_address_t)address InImage: (NSString*)image
@@ -184,23 +155,13 @@
 -(NSArray*) images
 {
     NSMutableArray *Images = [NSMutableArray array];
-    struct dyld_image_info64 ImageInfo;
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
-    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(ImageInfo);
+    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info64);
     
-    mach_vm_size_t ReadSize;
     for (uint32_t Loop = 0; Loop < InfoArrayCount; Loop++)
     {
-        mach_error_t err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)), ImageInfoSize, (mach_vm_address_t)&ImageInfo, &ReadSize);
-        
-        if (err != KERN_SUCCESS)
-        {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
-            return nil;
-        }
-        
-        [Images addObject: [NSValue valueWithAddress: ImageInfo.imageLoadAddress]];
+        const struct dyld_image_info64 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
+        if (ImageInfo) [Images addObject: [NSValue valueWithAddress: ImageInfo->imageLoadAddress]];
     }
     
     return Images;
@@ -208,39 +169,20 @@
 
 -(NSString*) filePathForImageAtAddress: (mach_vm_address_t)imageAddress
 {
-    struct dyld_image_info64 ImageInfo;
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
-    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(ImageInfo);
+    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info64);
     
-    mach_vm_size_t ReadSize;
     for (uint32_t Loop = 0; Loop < InfoArrayCount; Loop++)
     {
-        mach_error_t err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)), ImageInfoSize, (mach_vm_address_t)&ImageInfo, &ReadSize);
+        const struct dyld_image_info64 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
+        if (!ImageInfo) continue;
         
-        if (err != KERN_SUCCESS)
+        const mach_vm_address_t ImageLoadAddress = ImageInfo->imageLoadAddress;
+        if ((ImageLoadAddress <= imageAddress))
         {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
-            return nil;
-        }
-        
-        
-        if ((ImageInfo.imageLoadAddress <= imageAddress))
-        {
-            if ((ImageInfo.imageLoadAddress + FFImageStructureSizeInProcess(self, ImageInfo.imageLoadAddress)) > imageAddress)
+            if ((ImageLoadAddress + FFImageStructureSizeInProcess(self, ImageLoadAddress)) > imageAddress)
             {
-                char FilePath[PATH_MAX];
-                err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)ImageInfo.imageFilePath, sizeof(FilePath), (mach_vm_address_t)FilePath, &ReadSize);
-                
-                if (err != KERN_SUCCESS)
-                {
-                    mach_error("mach_vm_read_overwrite", err);
-                    printf("Read error: %u\n", err);
-                    return nil;
-                }
-                
-                
-                return [NSString stringWithUTF8String: FilePath];
+                return [self nullTerminatedStringAtAddress: (mach_vm_address_t)ImageInfo->imageFilePath];
             }
         }
     }
@@ -250,37 +192,18 @@
 
 -(NSString*) filePathForImageContainingAddress: (mach_vm_address_t)vmAddress
 {
-    struct dyld_image_info64 ImageInfo;
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
-    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(ImageInfo);
+    const uint64_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info64);
     
-    mach_vm_size_t ReadSize;
     for (uint32_t Loop = 0; Loop < InfoArrayCount; Loop++)
     {
-        mach_error_t err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)), ImageInfoSize, (mach_vm_address_t)&ImageInfo, &ReadSize);
+        const struct dyld_image_info64 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
+        if (!ImageInfo) continue;
         
-        if (err != KERN_SUCCESS)
+        
+        if (FFImageInProcessContainsVMAddress(self, ImageInfo->imageLoadAddress, vmAddress))
         {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
-            return nil;
-        }
-        
-        
-        if (FFImageInProcessContainsVMAddress(self, ImageInfo.imageLoadAddress, vmAddress))
-        {
-            char FilePath[PATH_MAX];
-            err = mach_vm_read_overwrite(self.task, (mach_vm_address_t)ImageInfo.imageFilePath, sizeof(FilePath), (mach_vm_address_t)FilePath, &ReadSize);
-            
-            if (err != KERN_SUCCESS)
-            {
-                mach_error("mach_vm_read_overwrite", err);
-                printf("Read error: %u\n", err);
-                return nil;
-            }
-            
-            
-            return [NSString stringWithUTF8String: FilePath];
+            return [self nullTerminatedStringAtAddress: (mach_vm_address_t)ImageInfo->imageFilePath];
         }
     }
     
