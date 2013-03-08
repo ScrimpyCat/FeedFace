@@ -113,7 +113,6 @@
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
     const uint32_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info32);
     
-    mach_vm_size_t ReadSize;
     if (image)
     {
         _Bool Match = FALSE;
@@ -159,7 +158,6 @@
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
     const uint32_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info32);
     
-    mach_vm_size_t ReadSize;
     for (uint32_t Loop = 0; Loop < InfoArrayCount; Loop++)
     {
         const struct dyld_image_info32 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
@@ -174,7 +172,6 @@
     const uint32_t InfoArrayCount = imageInfos.infoArrayCount;
     const uint32_t InfoArray = imageInfos.infoArray, ImageInfoSize = sizeof(struct dyld_image_info32);
     
-    mach_vm_size_t ReadSize;
     for (uint32_t Loop = 0; Loop < InfoArrayCount; Loop++)
     {
         const struct dyld_image_info32 *ImageInfo = [self dataAtAddress: (mach_vm_address_t)(InfoArray + (ImageInfoSize * Loop)) OfSize: ImageInfoSize].bytes;
