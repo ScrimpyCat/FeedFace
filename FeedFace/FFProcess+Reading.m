@@ -50,6 +50,7 @@
     {
         mach_error("mach_vm_region", err);
         printf("Region error: %u\n", err);
+        free(Data);
         return nil;
     }
     
@@ -59,6 +60,7 @@
     {
         mach_error("mach_vm_protect", err);
         printf("Protection error: %u\n", err);
+        free(Data);
         return nil;
     }
     
@@ -69,6 +71,7 @@
     {
         mach_error("mach_vm_read_overwrite", err);
         printf("Read error: %u\n", err);
+        free(Data);
         return nil;
     }
     
