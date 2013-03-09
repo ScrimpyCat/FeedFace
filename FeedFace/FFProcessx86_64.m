@@ -249,11 +249,18 @@
 
 -(NSString*) nameOfObject: (mach_vm_address_t)address
 {
-    const uint64_t *ObjectISA = [self dataAtAddress: address OfSize: sizeof(uint64_t)].bytes;
-    if (!ObjectISA) return nil;
-    
     if (self.usesNewRuntime)
     {
+        //Check to see if it's a tagged pointer (refer to objc-config.h in the future to see if this needs to be applied to other environments)
+        if (address & 1)
+        {
+            //don't handle yet
+            return nil;
+        }
+        
+        const uint64_t *ObjectISA = [self dataAtAddress: address OfSize: sizeof(uint64_t)].bytes;
+        if (!ObjectISA) return nil;
+        
         const class_ro_t64 *ClassRO = [self classROOfClass: *ObjectISA];
         if (!ClassRO) return nil;
         
@@ -267,6 +274,9 @@
     
     else
     {
+        const uint64_t *ObjectISA = [self dataAtAddress: address OfSize: sizeof(uint64_t)].bytes;
+        if (!ObjectISA) return nil;
+        
         return ((FFClass*)[FFClass classAtAddress: *ObjectISA InProcess: self]).name; //Lazy optimize later
     }
     
