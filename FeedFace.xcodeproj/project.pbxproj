@@ -42,6 +42,8 @@
 		F328134E167E6C7100485570 /* FFProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F328134C167E6C7100485570 /* FFProtocol.m */; };
 		F3281351167E6CDE00485570 /* FFCache.h in Headers */ = {isa = PBXBuildFile; fileRef = F328134F167E6CDE00485570 /* FFCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F3281352167E6CDE00485570 /* FFCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281350167E6CDE00485570 /* FFCache.m */; };
+		F35C6D0216EAE10F00C0A06E /* Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = F35C6D0016EAE10E00C0A06E /* Convenience.h */; };
+		F35C6D0316EAE10F00C0A06E /* Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = F35C6D0116EAE10E00C0A06E /* Convenience.m */; };
 		F361C6231699D28300EE02EF /* ObjcCache32.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6221699D28300EE02EF /* ObjcCache32.h */; };
 		F361C6251699D28B00EE02EF /* ObjcCache64.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6241699D28B00EE02EF /* ObjcCache64.h */; };
 		F361C6281699FCA800EE02EF /* NSObject+Injection.h in Headers */ = {isa = PBXBuildFile; fileRef = F361C6261699FCA800EE02EF /* NSObject+Injection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -134,6 +136,8 @@
 		F328134C167E6C7100485570 /* FFProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFProtocol.m; sourceTree = "<group>"; };
 		F328134F167E6CDE00485570 /* FFCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFCache.h; sourceTree = "<group>"; };
 		F3281350167E6CDE00485570 /* FFCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFCache.m; sourceTree = "<group>"; };
+		F35C6D0016EAE10E00C0A06E /* Convenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convenience.h; sourceTree = "<group>"; };
+		F35C6D0116EAE10E00C0A06E /* Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Convenience.m; sourceTree = "<group>"; };
 		F361C6221699D28300EE02EF /* ObjcCache32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcCache32.h; sourceTree = "<group>"; };
 		F361C6241699D28B00EE02EF /* ObjcCache64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcCache64.h; sourceTree = "<group>"; };
 		F361C6261699FCA800EE02EF /* NSObject+Injection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Injection.h"; sourceTree = "<group>"; };
@@ -265,6 +269,8 @@
 				F3C2AD7616AC1967009A66B0 /* FFInjector.m */,
 				F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */,
 				F3C2AD8016B1B2C3009A66B0 /* FFThread.m */,
+				F35C6D0016EAE10E00C0A06E /* Convenience.h */,
+				F35C6D0116EAE10E00C0A06E /* Convenience.m */,
 				F30B941216798FFD003A1B01 /* Process */,
 				F306304A167CBE260080EF76 /* Objc Runtime */,
 				F30B93F816797A36003A1B01 /* Supporting Files */,
@@ -379,6 +385,7 @@
 				F361C62B169B101200EE02EF /* PropertyImpMacros.h in Headers */,
 				F373ACE516B7D4EA00F9CEAC /* ObjcOldRuntime32.h in Headers */,
 				F373ACE716B7D4F200F9CEAC /* ObjcOldRuntime64.h in Headers */,
+				F35C6D0216EAE10F00C0A06E /* Convenience.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +482,7 @@
 				F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */,
 				F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */,
 				F39C9F8A16BEA2A80040C053 /* FFAddressSet.m in Sources */,
+				F35C6D0316EAE10F00C0A06E /* Convenience.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
