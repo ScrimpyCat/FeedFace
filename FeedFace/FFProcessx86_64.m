@@ -254,7 +254,13 @@
         //Check to see if it's a tagged pointer (refer to objc-config.h in the future to see if this needs to be applied to other environments)
         if (address & 1)
         {
-            //don't handle yet
+            /*
+             Don't handle yet.
+             Two possible ways to get the class of the object is to look up the symbol _objc_tagged_isa_table and handle it ourselves 
+             (000000000011b148 (__DATA,__data) non-external (was a private external) __objc_tagged_isa_table)
+             Or inject code into the process and return the result of object_getClass(address). Since as far as objc-private goes it's perfectly safe
+             (at the moment) to call, knowing that the pointer will be treated as tagged.
+             */
             return nil;
         }
         
