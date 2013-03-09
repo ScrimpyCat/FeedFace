@@ -732,7 +732,7 @@ SINGLE_FLAG_TYPE_PROPERTY(instancesHaveSpecificLayout, setInstancesHaveSpecificL
     uint32_t Major, Minor;
     FFGetSystemVersion(&Major, &Minor, NULL);
     
-    if ((self.process.is64) && (Major >= 10) && (Minor >= 8))
+    if ((Major >= 10) && (Minor >= 8))
     {
         return self.rwFlags & RW_METHOD_ARRAY;
     }
@@ -744,7 +744,7 @@ SINGLE_FLAG_TYPE_PROPERTY(instancesHaveSpecificLayout, setInstancesHaveSpecificL
     uint32_t Major, Minor;
     FFGetSystemVersion(&Major, &Minor, NULL);
     
-    if ((self.process.is64) && (Major >= 10) && (Minor >= 8))
+    if ((Major >= 10) && (Minor >= 8))
     {
         const uint32_t Flags = self.rwFlags & ~RW_METHOD_ARRAY;
         self.rwFlags = Flags | (methodListIsArray? RW_METHOD_ARRAY : 0);
