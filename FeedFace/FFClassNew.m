@@ -42,6 +42,7 @@
 #import <mach/mach_vm.h>
 
 #import "PropertyImpMacros.h"
+#import "Convenience.h"
 
 
 @interface FFClassNew ()
@@ -723,17 +724,32 @@ SINGLE_FLAG_TYPE_PROPERTY(isLoaded, setIsLoaded, rwFlags, RW_LOADED)
 SINGLE_FLAG_TYPE_PROPERTY(hasSpecializedVtable, setHasSpecializedVtable, rwFlags, RW_SPECIALIZED_VTABLE)
 SINGLE_FLAG_TYPE_PROPERTY(instancesHaveAssociatedObjects, setInstancesHaveAssociatedObjects, rwFlags, RW_INSTANCES_HAVE_ASSOCIATED_OBJECTS)
 SINGLE_FLAG_TYPE_PROPERTY(instancesHaveSpecificLayout, setInstancesHaveSpecificLayout, rwFlags, RW_HAS_INSTANCE_SPECIFIC_LAYOUT)
-//SINGLE_FLAG_TYPE_PROPERTY(methodListIsArray, setMethodListIsArray, rwFlags, RW_METHOD_ARRAY)
 /*
- Temp hack, as the more recent runtime versions are not used yet. So method list is always an array.
- otool -L /usr/lib/libobjc.A.dylib
- /usr/lib/libobjc.A.dylib:
- /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
- 
- Hopefully 228.0.0 will change when it's introduced, and so can just query that in the process.
+ Using OS version, but should really find out how to determine Obj-C version instead.
  */
--(_Bool)methodListIsArray {return YES;}
--(void)setMethodListIsArray: (_Bool)methodListIsArray{}
+-(_Bool) methodListIsArray
+{
+    uint32_t Major, Minor;
+    FFGetSystemVersion(&Major, &Minor, NULL);
+    
+    if ((self.process.is64) && (Major >= 10) && (Minor >= 8))
+    {
+        return self.rwFlags & RW_METHOD_ARRAY;
+    }
+    
+    return YES;
+}
+-(void) setMethodListIsArray: (_Bool)methodListIsArray
+{
+    uint32_t Major, Minor;
+    FFGetSystemVersion(&Major, &Minor, NULL);
+    
+    if ((self.process.is64) && (Major >= 10) && (Minor >= 8))
+    {
+        const uint32_t Flags = self.rwFlags & ~RW_METHOD_ARRAY;
+        self.rwFlags = Flags | (methodListIsArray? RW_METHOD_ARRAY : 0);
+    }
+}
 
 //RO & RW flags
 RO_RW_FLAG_TYPE_PROPERTY(hasCxxStructors, setHasCxxStructors, RO_HAS_CXX_STRUCTORS, RW_HAS_CXX_STRUCTORS)
