@@ -273,6 +273,14 @@
     return nil;
 }
 
+-(id) classOfObject: (mach_vm_address_t)address
+{
+    const uint64_t *ObjectISA = [self dataAtAddress: address OfSize: sizeof(uint64_t)].bytes;
+    if (!ObjectISA) return nil;
+    
+    return [FFClass classAtAddress: *ObjectISA InProcess: self];
+}
+
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
 {
     uint8_t Code[5];

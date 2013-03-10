@@ -289,6 +289,30 @@
     return nil;
 }
 
+-(id) classOfObject: (mach_vm_address_t)address
+{
+    if (self.usesNewRuntime)
+    {
+        //Check to see if it's a tagged pointer (refer to objc-config.h in the future to see if this needs to be applied to other environments)
+        if (address & 1)
+        {
+            /*
+             Don't handle yet.
+             Two possible ways to get the class of the object is to look up the symbol _objc_tagged_isa_table and handle it ourselves
+             (000000000011b148 (__DATA,__data) non-external (was a private external) __objc_tagged_isa_table)
+             Or inject code into the process and return the result of object_getClass(address). Since as far as objc-private goes it's perfectly safe
+             (at the moment) to call, knowing that the pointer will be treated as tagged.
+             */
+            return nil;
+        }
+    }
+    
+    const uint64_t *ObjectISA = [self dataAtAddress: address OfSize: sizeof(uint64_t)].bytes;
+    if (!ObjectISA) return nil;
+    
+    return [FFClass classAtAddress: *ObjectISA InProcess: self];
+}
+
 extern const void x86_64JumpCodeEnd, x86_64JumpCode, x86_64JumpCodeAddress;
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
 {

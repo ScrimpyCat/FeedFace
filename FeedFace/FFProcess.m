@@ -391,6 +391,12 @@
     return nil;
 }
 
+-(id) classOfObject: (mach_vm_address_t)address
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return nil;
+}
+
 -(id) classAtAddress: (mach_vm_address_t)address
 {
     return [FFClass classAtAddress: address InProcess: self];

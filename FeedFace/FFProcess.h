@@ -73,6 +73,7 @@
 //object inspection
 -(NSString*) nameOfObject: (mach_vm_address_t)address; //override
 -(id) classAtAddress: (mach_vm_address_t)address;
+-(id) classOfObject: (mach_vm_address_t)address; //override
 
 @end
 
