@@ -48,56 +48,27 @@ void FFImageInProcess(FFProcess *Process, mach_vm_address_t ImageLoadAddress, FF
 {
     if ((ImageHeaderAction) || (ImageLoadCommandsAction) || (ImageDataAction))
     {
-        const mach_port_name_t Task = Process.task;
         const _Bool Is64 = Process.is64;
         
         
-        union {
-            struct mach_header header;
-            struct mach_header_64 header64;
-        } Header;
         const size_t HeaderSize = (Is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
-        
-        mach_vm_size_t ReadSize;
-        mach_error_t err = mach_vm_read_overwrite(Task, ImageLoadAddress, HeaderSize, (mach_vm_address_t)&Header, &ReadSize);
-        
-        if (err != KERN_SUCCESS)
-        {
-            mach_error("mach_vm_read_overwrite", err);
-            printf("Read error: %u\n", err);
-            return;
-        }
+        const struct mach_header *Header = [Process dataAtAddress: ImageLoadAddress OfSize: HeaderSize].bytes;
+        if (!Header) return;
         
         
-        if (ImageHeaderAction) ImageHeaderAction(&Header);
+        if (ImageHeaderAction) ImageHeaderAction(Header);
         
         
         if ((ImageLoadCommandsAction) || (ImageDataAction))
         {
-            void *LoadCommands = malloc(Header.header.sizeofcmds);
-            if (!LoadCommands)
-            {
-                printf("Could not allocate memory to copy load commands\n");
-                return;
-            }
-            
-            
-            err = mach_vm_read_overwrite(Task, ImageLoadAddress + HeaderSize, Header.header.sizeofcmds, (mach_vm_address_t)LoadCommands, &ReadSize);
-            
-            if (err != KERN_SUCCESS)
-            {
-                mach_error("mach_vm_read_overwrite", err);
-                printf("Read error: %u\n", err);
-                free(LoadCommands);
-                return;
-            }
-            
+            const void *LoadCommands = [Process dataAtAddress: ImageLoadAddress + HeaderSize OfSize: Header->sizeofcmds].bytes;
+            if (!LoadCommands) return;
             
             
             ptrdiff_t CommandSize = 0;
-            for (uint32_t Loop2 = 0; Loop2 < Header.header.ncmds; Loop2++)
+            for (uint32_t Loop2 = 0; Loop2 < Header->ncmds; Loop2++)
             {
-                struct load_command *LoadCommand = LoadCommands + CommandSize;
+                const struct load_command *LoadCommand = LoadCommands + CommandSize;
                 
                 if (ImageLoadCommandsAction) ImageLoadCommandsAction(LoadCommand);
                 
@@ -123,24 +94,8 @@ void FFImageInProcess(FFProcess *Process, mach_vm_address_t ImageLoadAddress, FF
                         }
                         
                         
-                        void *SegmentData = malloc(SegmentSize);
-                        if (!SegmentData)
-                        {
-                            printf("Could not allocate memory to copy segment data\n");
-                            return;
-                        }
-                        
-                        err = mach_vm_read_overwrite(Task, SegmentAddress, SegmentSize, (mach_vm_address_t)SegmentData, &ReadSize);
-                        
-                        if (err != KERN_SUCCESS)
-                        {
-                            mach_error("mach_vm_read_overwrite", err);
-                            printf("Read error: %u\n", err);
-                            free(LoadCommands);
-                            free(SegmentData);
-                            return;
-                        }
-                        
+                        const void *SegmentData = [Process dataAtAddress: SegmentAddress OfSize: SegmentSize].bytes;
+                        if (!SegmentData) return;
                         
                         ImageDataAction(SegmentData);
                     }
@@ -148,8 +103,6 @@ void FFImageInProcess(FFProcess *Process, mach_vm_address_t ImageLoadAddress, FF
                 
                 CommandSize += LoadCommand->cmdsize;
             }
-            
-            free(LoadCommands);
         }
     }
 }
@@ -158,9 +111,9 @@ uint64_t FFImageStructureSizeInProcess(FFProcess *Process, mach_vm_address_t Ima
 {
     __block uint64_t ImageSize = 0;
     
-    FFImageInProcess(Process, ImageLoadAddress, Process.is64? (FFIMAGE_ACTION)^(struct mach_header_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, Process.is64? (FFIMAGE_ACTION)^(const struct mach_header_64 *data){
         ImageSize += sizeof(*data) + data->sizeofcmds;
-    } : (FFIMAGE_ACTION)^(struct mach_header *data){
+    } : (FFIMAGE_ACTION)^(const struct mach_header *data){
         ImageSize += sizeof(*data) + data->sizeofcmds;
     }, NULL, NULL);
     
@@ -171,13 +124,13 @@ uint64_t FFImageStructureSizeInProcess(FFProcess *Process, mach_vm_address_t Ima
 _Bool FFImageInProcessContainsVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress)
 {
     __block _Bool ContainsAddress = NO;
-    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(struct segment_command_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
             const mach_vm_address_t Addr = data->vmaddr;
             if ((Addr <= VMAddress) && ((Addr + data->vmsize) > VMAddress)) ContainsAddress = YES;  
         }
-    } : (FFIMAGE_ACTION)^(struct segment_command *data){
+    } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
             const mach_vm_address_t Addr = data->vmaddr;
@@ -193,7 +146,7 @@ _Bool FFImageInProcessContainsSegment(FFProcess *Process, mach_vm_address_t Imag
     __block _Bool Found = NO;
     __block mach_vm_address_t SegmentLoadCommand = ImageLoadAddress + (Process.is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
     
-    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(struct segment_command_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if ((data->cmd == LC_SEGMENT_64) && (!strncmp([SegmentName UTF8String], data->segname, 16)))
         {
             if (VMAddress) *VMAddress = data->vmaddr;
@@ -202,7 +155,7 @@ _Bool FFImageInProcessContainsSegment(FFProcess *Process, mach_vm_address_t Imag
         }
         
         SegmentLoadCommand += data->cmdsize;
-    } : (FFIMAGE_ACTION)^(struct segment_command *data){
+    } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if ((data->cmd == LC_SEGMENT) && (!strncmp([SegmentName UTF8String], data->segname, 16)))
         {
             if (VMAddress) *VMAddress = data->vmaddr;
@@ -221,12 +174,12 @@ _Bool FFImageInProcessContainsSection(FFProcess *Process, mach_vm_address_t Imag
     __block _Bool Found = NO;
     __block mach_vm_address_t SectionLoadCommand = ImageLoadAddress + (Process.is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
     
-    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(struct segment_command_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if ((data->cmd == LC_SEGMENT_64) && (!strncmp([SegmentName UTF8String], data->segname, 16)))
         {
             SectionLoadCommand += sizeof(struct segment_command_64);
             size_t SectCount = data->nsects;
-            struct section_64 *Section = (void*)data + sizeof(struct segment_command_64);
+            const struct section_64 *Section = (const void*)data + sizeof(struct segment_command_64);
             for (size_t Loop = 0; Loop < SectCount; Loop++)
             {
                 if (!strncmp([SectionName UTF8String], Section[Loop].sectname, 16))
@@ -241,12 +194,12 @@ _Bool FFImageInProcessContainsSection(FFProcess *Process, mach_vm_address_t Imag
         }
         
         else SectionLoadCommand += data->cmdsize;
-    } : (FFIMAGE_ACTION)^(struct segment_command *data){
+    } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if ((data->cmd == LC_SEGMENT) && (!strncmp([SegmentName UTF8String], data->segname, 16)))
         {
             SectionLoadCommand += sizeof(struct segment_command);
             size_t SectCount = data->nsects;
-            struct section *Section = (void*)data + sizeof(struct segment_command);
+            const struct section *Section = (const void*)data + sizeof(struct segment_command);
             for (size_t Loop = 0; Loop < SectCount; Loop++)
             {
                 if (!strncmp([SectionName UTF8String], Section[Loop].sectname, 16))
@@ -269,7 +222,7 @@ _Bool FFImageInProcessContainsSection(FFProcess *Process, mach_vm_address_t Imag
 NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress)
 {
     __block NSString *Segment = nil;
-    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(struct segment_command_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
             if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
@@ -277,7 +230,7 @@ NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm
                 Segment = [NSString stringWithUTF8String: data->segname];
             }
         }
-    } : (FFIMAGE_ACTION)^(struct segment_command *data){
+    } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
             if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
@@ -295,14 +248,14 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
     __block NSString *SectionName = nil;
     __block mach_vm_address_t SectionLoadCommand = ImageLoadAddress + (Process.is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
     
-    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(struct segment_command_64 *data){
+    FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
             if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
             {
                 SectionLoadCommand += sizeof(struct segment_command_64);
                 size_t SectCount = data->nsects;
-                struct section_64 *Section = (void*)data + sizeof(struct segment_command_64);
+                const struct section_64 *Section = (const void*)data + sizeof(struct segment_command_64);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
                     if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))
@@ -317,14 +270,14 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
         }
         
         else SectionLoadCommand += data->cmdsize;
-    } : (FFIMAGE_ACTION)^(struct segment_command *data){
+    } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
             if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
             {
                 SectionLoadCommand += sizeof(struct segment_command);
                 size_t SectCount = data->nsects;
-                struct section *Section = (void*)data + sizeof(struct segment_command);
+                const struct section *Section = (const void*)data + sizeof(struct segment_command);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
                     if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))

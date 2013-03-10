@@ -28,7 +28,7 @@
 @class FFProcess;
 
 
-typedef void (^FFIMAGE_ACTION)(void *data);
+typedef void (^FFIMAGE_ACTION)(const void *data);
 
 _Bool FFImagePathMatch(NSString *ImagePath1, NSString *ImagePath2);
 

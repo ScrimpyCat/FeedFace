@@ -144,7 +144,7 @@
     const mach_vm_address_t ImageLoadAddress = [self loadAddressForImage: image];
     
     __block mach_vm_address_t Slide;
-    FFImageInProcess(self, ImageLoadAddress, (FFIMAGE_ACTION)^(struct mach_header *data){
+    FFImageInProcess(self, ImageLoadAddress, (FFIMAGE_ACTION)^(const struct mach_header *data){
         if (data->flags & MH_PIE) Slide = 0x1000;
         else Slide = 0;
     }, NULL, NULL);
