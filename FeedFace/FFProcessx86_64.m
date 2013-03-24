@@ -324,4 +324,34 @@ extern const void x86_64JumpCodeEnd, x86_64JumpCode, x86_64JumpCodeAddress;
     return [NSData dataWithBytes: Code length: Length];
 }
 
+-(NSData*) smallestJumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
+{
+    uint64_t Rel = (uint64_t)(toAddr - fromAddr);
+    if ((Rel & ~(uint64_t)UINT32_MAX) && (-Rel & ~(uint64_t)UINT32_MAX))
+    {
+        const ptrdiff_t Length = &x86_64JumpCodeEnd - &x86_64JumpCode;
+        uint8_t Code[Length];
+        memcpy(Code, &x86_64JumpCode, Length);
+        *(uint64_t*)(Code + (&x86_64JumpCodeAddress - &x86_64JumpCode)) = toAddr;
+        
+        return [NSData dataWithBytes: Code length: Length];
+    }
+    
+    else if (((Rel -= 5) & ~(uint64_t)UINT8_MAX) && (-Rel & ~(uint64_t)UINT8_MAX))
+    {
+        uint8_t Code[5];
+        Code[0] = 0xe9; //jmp rel32
+        *(uint32_t*)(Code + 1) = (uint32_t)(toAddr - (fromAddr + 5));
+        
+        return [NSData dataWithBytes: Code length: 5];
+    }
+    
+    else
+    {
+        uint8_t Code[2] = { 0xeb, Rel }; //jmp rel8
+        
+        return [NSData dataWithBytes: Code length: 2];
+    }
+}
+
 @end

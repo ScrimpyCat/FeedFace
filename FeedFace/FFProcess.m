@@ -335,6 +335,12 @@
     return nil;
 }
 
+-(NSData*) smallestJumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return nil;
+}
+
 -(void) terminate
 {
     mach_error_t err = task_terminate(self.task);

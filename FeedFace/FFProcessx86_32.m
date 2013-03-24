@@ -290,4 +290,24 @@
     return [NSData dataWithBytes: Code length: 5];
 }
 
+-(NSData*) smallestJumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
+{
+    const uint32_t Rel = (uint32_t)(toAddr - (fromAddr + 5));
+    if ((Rel & ~(uint32_t)UINT8_MAX) && (-Rel & ~(uint32_t)UINT8_MAX))
+    {
+        uint8_t Code[5];
+        Code[0] = 0xe9; //jmp rel32
+        *(uint32_t*)(Code + 1) = (uint32_t)(toAddr - (fromAddr + 5));
+        
+        return [NSData dataWithBytes: Code length: 5];
+    }
+    
+    else
+    {
+        uint8_t Code[2] = { 0xeb, Rel }; //jmp rel8
+        
+        return [NSData dataWithBytes: Code length: 2];
+    }
+}
+
 @end
