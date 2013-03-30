@@ -329,6 +329,11 @@
     return 0;
 }
 
+-(mach_vm_address_t) addressForSymbol: (NSString*)symbol InImage: (NSString*)image
+{
+    return FFImageInProcessAddressOfSymbol(self, [self loadAddressForImage: image], symbol);
+}
+
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr
 {
     NSLog(@"Error: trying to use placeholder class or need to override in subclass");
