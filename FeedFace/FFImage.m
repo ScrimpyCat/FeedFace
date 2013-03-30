@@ -306,7 +306,7 @@ mach_vm_address_t FFImageInProcessAddressOfSymbol(FFProcess *Process, mach_vm_ad
     NSString *Image = [Process filePathForImageAtAddress: ImageLoadAddress];
     if (FFImageInFileContainsSymbol(Image, Process.cpuType, Symbol, NULL, NULL, NULL, &Address))
     {
-        [Process relocateAddress: Address InImage: Image];
+        Address = [Process relocateAddress: Address InImage: Image];
     }
     
     return Address;
