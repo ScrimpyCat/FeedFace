@@ -380,3 +380,36 @@ void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION 
         }
     }
 }
+
+_Bool FFImageInFileContainsSymbol(NSString *ImagePath, cpu_type_t CPUType, NSString *Symbol, uint8_t *Type, uint8_t *SectionIndex, int16_t *Description, mach_vm_address_t *Value)
+{
+    __block _Bool Found = NO;
+    const char *String = [Symbol UTF8String];
+    FFImageInFile(ImagePath, CPUType, NULL, (FFIMAGE_FILE_ACTION)^(const void *file, const void *image, const struct symtab_command *data){
+        if (data->cmd == LC_SYMTAB)
+        {
+            const struct nlist_64 *SymbolTable = image + data->symoff;
+            const char *StringTable = image + data->stroff;
+            const uint32_t StringTableSize = data->strsize;
+            
+            for (uint32_t Loop = 0; Loop < data->nsyms; Loop++)
+            {
+                uint32_t StringIndex = SymbolTable[Loop].n_un.n_strx;
+                if ((StringIndex != 0) && (StringIndex < StringTableSize))
+                {
+                    if (!strcmp(String, StringTable + StringIndex))
+                    {
+                        *Type = SymbolTable[Loop].n_type;
+                        *SectionIndex = SymbolTable[Loop].n_sect;
+                        *Description = SymbolTable[Loop].n_desc;
+                        *Value = SymbolTable[Loop].n_value;
+                        Found = YES;
+                        return;
+                    }
+                }
+            }
+        }
+    }, NULL);
+    
+    return Found;
+}

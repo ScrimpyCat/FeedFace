@@ -42,3 +42,4 @@ NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm
 NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress, NSString **Segment);
 
 void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION ImageHeaderAction, FFIMAGE_FILE_ACTION ImageLoadCommandsAction, FFIMAGE_FILE_ACTION ImageDataAction);
+_Bool FFImageInFileContainsSymbol(NSString *ImagePath, cpu_type_t CPUType, NSString *Symbol, uint8_t *Type, uint8_t *SectionIndex, int16_t *Description, mach_vm_address_t *Value);
