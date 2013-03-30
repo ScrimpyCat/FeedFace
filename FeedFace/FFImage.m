@@ -331,7 +331,6 @@ void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION 
                 if (OSReadBigInt32(&Arch[Loop].cputype, 0) == CPUType)
                 {
                     Offset = OSReadBigInt32(&Arch[Loop].offset, 0);
-                    printf("%u\n", OSReadBigInt32(&Arch[Loop].align, 0));
                     break;
                 }
             }
