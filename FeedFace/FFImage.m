@@ -300,6 +300,18 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
     return SectionName;
 }
 
+mach_vm_address_t FFImageInProcessAddressOfSymbol(FFProcess *Process, mach_vm_address_t ImageLoadAddress, NSString *Symbol)
+{
+    mach_vm_address_t Address = 0;
+    NSString *Image = [Process filePathForImageAtAddress: ImageLoadAddress];
+    if (FFImageInFileContainsSymbol(Image, Process.cpuType, Symbol, NULL, NULL, NULL, &Address))
+    {
+        [Process relocateAddress: Address InImage: Image];
+    }
+    
+    return Address;
+}
+
 void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION ImageHeaderAction, FFIMAGE_FILE_ACTION ImageLoadCommandsAction, FFIMAGE_FILE_ACTION ImageDataAction)
 {
     if ((ImageHeaderAction) || (ImageLoadCommandsAction) || (ImageDataAction))
@@ -399,10 +411,10 @@ _Bool FFImageInFileContainsSymbol(NSString *ImagePath, cpu_type_t CPUType, NSStr
                 {
                     if (!strcmp(String, StringTable + StringIndex))
                     {
-                        *Type = SymbolTable[Loop].n_type;
-                        *SectionIndex = SymbolTable[Loop].n_sect;
-                        *Description = SymbolTable[Loop].n_desc;
-                        *Value = SymbolTable[Loop].n_value;
+                        if (Type) *Type = SymbolTable[Loop].n_type;
+                        if (SectionIndex) *SectionIndex = SymbolTable[Loop].n_sect;
+                        if (Description) *Description = SymbolTable[Loop].n_desc;
+                        if (Value) *Value = SymbolTable[Loop].n_value;
                         Found = YES;
                         return;
                     }
