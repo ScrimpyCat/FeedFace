@@ -26,6 +26,9 @@
 #import "FFImage.h"
 #import "FFProcess.h"
 
+#import <libkern/OSByteOrder.h>
+#import <mach-o/fat.h>
+#import <mach-o/nlist.h>
 #import <mach-o/loader.h>
 #import <mach/mach_vm.h>
 #import <mach/mach.h>
@@ -295,4 +298,85 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
     }, NULL);
     
     return SectionName;
+}
+
+void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION ImageHeaderAction, FFIMAGE_FILE_ACTION ImageLoadCommandsAction, FFIMAGE_FILE_ACTION ImageDataAction)
+{
+    if ((ImageHeaderAction) || (ImageLoadCommandsAction) || (ImageDataAction))
+    {
+        const _Bool Is64 = CPUType & CPU_ARCH_ABI64;
+        
+        const void * const ImageFileBeginning = [[NSData dataWithContentsOfFile: ImagePath] bytes];
+        if (!ImageFileBeginning) return;
+        
+        const void *ImageFile = ImageFileBeginning;
+        if (OSReadBigInt32(&((struct fat_header*)ImageFile)->magic, 0) == FAT_MAGIC)
+        {
+            uint32_t Offset = 0;
+            const struct fat_arch * const Arch = ImageFile + sizeof(struct fat_header);
+            for (uint32_t Loop = 0, Count = OSReadBigInt32(&((struct fat_header*)ImageFile)->nfat_arch, 0); Loop < Count; Loop++)
+            {
+                if (OSReadBigInt32(&Arch[Loop].cputype, 0) == CPUType)
+                {
+                    Offset = OSReadBigInt32(&Arch[Loop].offset, 0);
+                    printf("%u\n", OSReadBigInt32(&Arch[Loop].align, 0));
+                    break;
+                }
+            }
+            
+            if (Offset == 0)
+            {
+                NSLog(@"Could not find fat arch matching cpu type: %#x", CPUType);
+                return;
+            }
+            
+            
+            ImageFile += Offset;
+        }
+        
+        
+        const size_t HeaderSize = (Is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
+        const struct mach_header * const Header = ImageFile;
+        
+        
+        if (ImageHeaderAction) ImageHeaderAction(ImageFileBeginning, ImageFile, Header);
+        
+        
+        if ((ImageLoadCommandsAction) || (ImageDataAction))
+        {
+            const void * const LoadCommands = ImageFile + HeaderSize;
+            
+            ptrdiff_t CommandSize = 0;
+            for (uint32_t Loop2 = 0; Loop2 < Header->ncmds; Loop2++)
+            {
+                const struct load_command * const LoadCommand = LoadCommands + CommandSize;
+                
+                if (ImageLoadCommandsAction) ImageLoadCommandsAction(ImageFileBeginning, ImageFile, LoadCommand);
+                
+                if (ImageDataAction)
+                {
+                    const uint32_t cmd = LoadCommand->cmd;
+                    if ((cmd == LC_SEGMENT_64) || (cmd == LC_SEGMENT))
+                    {
+                        const void *SegmentData;
+                        if (Is64)
+                        {
+                            const struct segment_command_64* const Segment = (struct segment_command_64*)(LoadCommands + CommandSize);
+                            SegmentData = ImageFileBeginning + Segment->fileoff;
+                        }
+                        
+                        else
+                        {
+                            const struct segment_command* const Segment = (struct segment_command*)(LoadCommands + CommandSize);
+                            SegmentData = ImageFileBeginning + Segment->fileoff;
+                        }
+                        
+                        ImageDataAction(ImageFileBeginning, ImageFile, SegmentData);
+                    }
+                }
+                
+                CommandSize += LoadCommand->cmdsize;
+            }
+        }
+    }
 }

@@ -29,6 +29,7 @@
 
 
 typedef void (^FFIMAGE_ACTION)(const void *data);
+typedef void (^FFIMAGE_FILE_ACTION)(const void *file, const void *image, const void *data);
 
 _Bool FFImagePathMatch(NSString *ImagePath1, NSString *ImagePath2);
 
@@ -39,3 +40,5 @@ _Bool FFImageInProcessContainsSegment(FFProcess *Process, mach_vm_address_t Imag
 _Bool FFImageInProcessContainsSection(FFProcess *Process, mach_vm_address_t ImageLoadAddress, NSString *SegmentName, NSString *SectionName, mach_vm_address_t *LoadCommandAddress, mach_vm_address_t *VMAddress); //VMAddress directly from Mach-O data structure for that image; in other words it needs to be relocated if you want to reference that address in the process correctly.
 NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress);
 NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress, NSString **Segment);
+
+void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION ImageHeaderAction, FFIMAGE_FILE_ACTION ImageLoadCommandsAction, FFIMAGE_FILE_ACTION ImageDataAction);
