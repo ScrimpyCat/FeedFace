@@ -275,7 +275,7 @@ static FFINJECTION DataInjectionDisabler = (FFINJECTION)^(FFDataInjector *Inject
     return [FFCodeInjector injectCodecaveToCode: code AdditionalInfo: nil FromAddress: address InProcess: process];
 }
 
-+(FFCodeInjector*)injectCodecaveToCode:(NSData *)code AdditionalInfo:(NSDictionary *)info FromAddress:(mach_vm_address_t)address InProcess:(FFProcess *)process
++(FFCodeInjector*) injectCodecaveToCode: (NSData*)code AdditionalInfo: (NSDictionary*)info FromAddress: (mach_vm_address_t)address InProcess: (FFProcess*)process
 {
     return [FFCodeInjector inject: code AdditionalInfo: [NSDictionary dictionaryWithObjectsAndKeys:
                                                          [NSValue valueWithAddress: address], @"address",
@@ -330,9 +330,18 @@ static FFINJECTION CodeInjectionDisabler = (FFINJECTION)^(FFCodeInjector *Inject
 };
 
 static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injector){
-    FFAddressRange Range = { Injector.address, Injector.address + [Injector.data length] };
+    const NSUInteger DataSize = [Injector.data length];
+    
+    FFAddressRange Range = { Injector.address, Injector.address + DataSize };
     [Injector.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: Range]];
     [Injector.process write: Injector.data ToAddress: Injector.address];
+    
+    if (Injector.fillWithNops)
+    {
+        const NSUInteger OriginalCodeSize = [Injector.originalData length];
+        if (DataSize < OriginalCodeSize) [Injector.process write: [Injector.process nopForSize: OriginalCodeSize - DataSize] ToAddress: Range.end];
+    }
+    
     [Injector.process resume];
 };
 
@@ -367,7 +376,10 @@ static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injecto
     self.address = [Addr addressValue];
     self.originalData = [NSData data];
     isCodecave = [CodeCave boolValue];
-    if (isCodecave) code = [[FFMemory allocateInProcess: self.process WithSize: 1] retain];
+    if (isCodecave) code = [[FFMemory allocateInProcess: proc WithSize: 1] retain];
+    code.maxProtection = VM_PROT_ALL;
+    code.protection = VM_PROT_ALL;
+    self.fillWithNops = YES;
     
     if ((self = [super initWithInjectionData: theData AdditionalInfo: Info InProcess: proc]))
     {
@@ -383,21 +395,38 @@ static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injecto
 -(void) setData: (NSData*)data
 {
     NSMutableData *OriginalData = [[self.originalData mutableCopy] autorelease];
-    const NSUInteger NewLength = [data length], OldLength = [OriginalData length];
+    NSUInteger NewLength = [data length], OldLength = [OriginalData length];
     
     if (isCodecave)
     {
         mach_vm_size_t MaxSizeJump;
-        createJumpCode(0, 0, &MaxSizeJump);
+        createJumpCode(self.process, 0, 0, &MaxSizeJump);
         const mach_vm_size_t CodeSize = NewLength + MaxSizeJump;
         code.size = CodeSize;
         
         mach_vm_address_t CodeAddr = code.address;
         const mach_vm_address_t InjectionAddr = self.address;
         
+        
         [self.process pauseWithNoThreadsExecutingInSet: [FFAddressSet addressSetWithAddressesInRange: (FFAddressRange){ CodeAddr, CodeAddr + CodeSize }]];
         
-        self.jumpCode = createJumpCode(InjectionAddr, CodeAddr, &MaxSizeJump);
+        NSMutableData *JumpCode = [[createJumpCode(self.process, InjectionAddr, CodeAddr, &MaxSizeJump) mutableCopy] autorelease];
+        if (self.fillWithNops)
+        {
+            mach_vm_address_t Address = self.address;
+            mach_vm_size_t TotalSize = 0, JumpSize = [JumpCode length];
+            
+            while ((TotalSize < JumpSize) || (([[self.process nopForSize: TotalSize] length]) != TotalSize))
+            {
+                const mach_vm_size_t InstructionSize = [self.process sizeOfInstructionAtAddress: Address];
+                TotalSize += InstructionSize;
+                Address += InstructionSize;
+            }
+            
+            [JumpCode appendData: [self.process nopForSize: TotalSize - JumpSize]];
+        }
+        self.jumpCode = JumpCode;
+        self.originalData = [self.process dataAtAddress: InjectionAddr OfSize: [JumpCode length]];
         
         if (placement == CODE_PLACEMENT_OC)
         {
@@ -423,6 +452,21 @@ static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injecto
     
     else if (OldLength < NewLength)
     {
+        if (self.fillWithNops)
+        {
+            mach_vm_address_t Address = self.address + OldLength;
+            mach_vm_size_t TotalSize = 0;
+            
+            while ((OldLength + TotalSize < NewLength) || (([[self.process nopForSize: TotalSize] length]) != TotalSize))
+            {
+                const mach_vm_size_t InstructionSize = [self.process sizeOfInstructionAtAddress: Address];
+                TotalSize += InstructionSize;
+                Address += InstructionSize;
+            }
+            
+            NewLength = OldLength + TotalSize;
+        }
+        
         [OriginalData appendData: [self.process dataAtAddress: self.address + OldLength OfSize: NewLength - OldLength]];
         self.originalData = OriginalData;
     }
@@ -461,10 +505,9 @@ static OSSpinLock JumpCodeLock = OS_SPINLOCK_INIT;
     if (jumpCodeCreator) createJumpCode = jumpCodeCreator;
     else
     {
-        FFProcess *Proc = self.process;
-        createJumpCode = ^NSData *(mach_vm_address_t from, mach_vm_address_t to, mach_vm_size_t *maxSize){
-            *maxSize = [[Proc jumpCodeToAddress: 0 FromAddress: 0] length]; //change to [Proc maxJumpCodeSize];
-            return [Proc jumpCodeToAddress: to FromAddress: from];
+        createJumpCode = ^NSData *(FFProcess *process, mach_vm_address_t from, mach_vm_address_t to, mach_vm_size_t *maxSize){
+            *maxSize = [[process jumpCodeToAddress: 0 FromAddress: 0] length]; //change to [Proc maxJumpCodeSize];
+            return [process jumpCodeToAddress: to FromAddress: from];
         };
     }
 }

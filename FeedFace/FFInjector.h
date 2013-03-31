@@ -64,7 +64,7 @@ typedef void (^FFINJECTION)(FFInjector *injector);
 @end
 
 
-typedef NSData *(^FFCODEINJECTOR_JUMPCODE)(mach_vm_address_t from, mach_vm_address_t to, mach_vm_size_t *maxSize); //Set *maxSize to the largest possible size of data that this function could return/produce
+typedef NSData *(^FFCODEINJECTOR_JUMPCODE)(FFProcess *process, mach_vm_address_t from, mach_vm_address_t to, mach_vm_size_t *maxSize); //Set *maxSize to the largest possible size of data that this function could return/produce
 
 @interface FFCodeInjector : FFInjector
 

@@ -320,4 +320,14 @@
     return Size == INSTRUCTION_INVALID? 0 : Size;
 }
 
+-(NSData*) nopForSize: (mach_vm_size_t)size
+{
+    //don't bother with using higher byte count nops, just use the standard single byte nop.
+    uint8_t *NopFill = malloc(size);
+    if (!NopFill) return nil;
+    
+    memset(NopFill, 0x90, size);
+    return [NSData dataWithBytesNoCopy: NopFill length: size freeWhenDone: YES];
+}
+
 @end

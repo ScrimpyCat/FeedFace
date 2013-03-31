@@ -352,6 +352,12 @@
     return 0;
 }
 
+-(NSData*) nopForSize: (mach_vm_size_t)size
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return nil;
+}
+
 -(void) terminate
 {
     mach_error_t err = task_terminate(self.task);
