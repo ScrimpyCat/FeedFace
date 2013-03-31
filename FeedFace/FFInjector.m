@@ -179,7 +179,7 @@ static FFINJECTION DataInjectionDisabler = (FFINJECTION)^(FFDataInjector *Inject
 -(id) initWithInjectionData: (NSData*)theData AdditionalInfo: (NSDictionary*)info InProcess: (FFProcess*)proc
 {
     NSValue *Addr = nil;
-    if ((!(Addr = [info objectForKey: @"address"])) || ([theData isKindOfClass: [NSData class]]))
+    if ((!(Addr = [info objectForKey: @"address"])) || (![theData isKindOfClass: [NSData class]]))
     {
         [self release];
         return nil;
@@ -340,7 +340,7 @@ static FFINJECTION CodeInjectionEnabler = (FFINJECTION)^(FFCodeInjector *Injecto
 {
     NSValue *Addr = nil;
     NSNumber *CodeCave = nil;
-    if ((!(Addr = [info objectForKey: @"address"])) || (!(CodeCave = [info objectForKey: @"isCodecave"])) || ([theData isKindOfClass: [NSData class]]))
+    if ((!(Addr = [info objectForKey: @"address"])) || (!(CodeCave = [info objectForKey: @"isCodecave"])) || (![theData isKindOfClass: [NSData class]]))
     {
         [self release];
         return nil;
