@@ -63,6 +63,7 @@
 //convenient code
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr; //override
 -(NSData*) smallestJumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr; //override
+-(mach_vm_size_t) sizeOfInstructionAtAddress: (mach_vm_address_t)address; //override
 
 
 -(void) terminate;

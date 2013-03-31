@@ -35,6 +35,7 @@
 #import <mach-o/dyld_images.h>
 #import <mach-o/loader.h>
 
+#import "InstructionSize.h"
 
 @interface FFProcessx86_64 ()
 
@@ -352,6 +353,14 @@ extern const void x86_64JumpCodeEnd, x86_64JumpCode, x86_64JumpCodeAddress;
         
         return [NSData dataWithBytes: Code length: 2];
     }
+}
+
+-(mach_vm_size_t) sizeOfInstructionAtAddress: (mach_vm_address_t)address
+{
+    NSData *Data = [self dataAtAddress: address OfSize: 32];
+    size_t Size = InstructionSize_x86_64([Data bytes], [Data length]);
+    
+    return Size == INSTRUCTION_INVALID? 0 : Size;
 }
 
 @end

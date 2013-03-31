@@ -72,6 +72,9 @@
 		F3C2AD7B16AC93B9009A66B0 /* x86_64JumpCode.gen.s in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */; };
 		F3C2AD8116B1B2C3009A66B0 /* FFThread.h in Headers */ = {isa = PBXBuildFile; fileRef = F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F3C2AD8016B1B2C3009A66B0 /* FFThread.m */; };
+		F3EF9F361707EA1200BB80C9 /* InstructionSize.h in Headers */ = {isa = PBXBuildFile; fileRef = F3EF9F331707EA1200BB80C9 /* InstructionSize.h */; };
+		F3EF9F371707EA1200BB80C9 /* x86_64_InstructionSize.m in Sources */ = {isa = PBXBuildFile; fileRef = F3EF9F341707EA1200BB80C9 /* x86_64_InstructionSize.m */; };
+		F3EF9F381707EA1200BB80C9 /* x86_InstructionSize.m in Sources */ = {isa = PBXBuildFile; fileRef = F3EF9F351707EA1200BB80C9 /* x86_InstructionSize.m */; };
 		F3F14584168B3F5C0028D039 /* ObjcNewRuntime32.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14583168B3F5C0028D039 /* ObjcNewRuntime32.h */; };
 		F3F14587168B42050028D039 /* dyld_image32.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14586168B42050028D039 /* dyld_image32.h */; };
 		F3F14589168B42960028D039 /* dyld_image64.h in Headers */ = {isa = PBXBuildFile; fileRef = F3F14588168B42960028D039 /* dyld_image64.h */; };
@@ -166,6 +169,9 @@
 		F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = x86_64JumpCode.gen.s; sourceTree = "<group>"; };
 		F3C2AD7F16B1B2C2009A66B0 /* FFThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFThread.h; sourceTree = "<group>"; };
 		F3C2AD8016B1B2C3009A66B0 /* FFThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFThread.m; sourceTree = "<group>"; };
+		F3EF9F331707EA1200BB80C9 /* InstructionSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionSize.h; sourceTree = "<group>"; };
+		F3EF9F341707EA1200BB80C9 /* x86_64_InstructionSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = x86_64_InstructionSize.m; sourceTree = "<group>"; };
+		F3EF9F351707EA1200BB80C9 /* x86_InstructionSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = x86_InstructionSize.m; sourceTree = "<group>"; };
 		F3F14583168B3F5C0028D039 /* ObjcNewRuntime32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcNewRuntime32.h; sourceTree = "<group>"; };
 		F3F14586168B42050028D039 /* dyld_image32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_image32.h; sourceTree = "<group>"; };
 		F3F14588168B42960028D039 /* dyld_image64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_image64.h; sourceTree = "<group>"; };
@@ -305,6 +311,7 @@
 				F30B94171679E603003A1B01 /* FFProcessx86_64.h */,
 				F30B94181679E603003A1B01 /* FFProcessx86_64.m */,
 				F3C2AD7A16AC93B9009A66B0 /* x86_64JumpCode.gen.s */,
+				F3EF9F321707E9F700BB80C9 /* Instruction Size */,
 			);
 			name = Process;
 			sourceTree = "<group>";
@@ -339,6 +346,16 @@
 				F369A53716A1AF3700E92C44 /* FFProtocolOld.m */,
 			);
 			name = "Old Runtime";
+			sourceTree = "<group>";
+		};
+		F3EF9F321707E9F700BB80C9 /* Instruction Size */ = {
+			isa = PBXGroup;
+			children = (
+				F3EF9F331707EA1200BB80C9 /* InstructionSize.h */,
+				F3EF9F341707EA1200BB80C9 /* x86_64_InstructionSize.m */,
+				F3EF9F351707EA1200BB80C9 /* x86_InstructionSize.m */,
+			);
+			name = "Instruction Size";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,6 +403,7 @@
 				F373ACE516B7D4EA00F9CEAC /* ObjcOldRuntime32.h in Headers */,
 				F373ACE716B7D4F200F9CEAC /* ObjcOldRuntime64.h in Headers */,
 				F35C6D0216EAE10F00C0A06E /* Convenience.h in Headers */,
+				F3EF9F361707EA1200BB80C9 /* InstructionSize.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +501,8 @@
 				F3C2AD8216B1B2C3009A66B0 /* FFThread.m in Sources */,
 				F39C9F8A16BEA2A80040C053 /* FFAddressSet.m in Sources */,
 				F35C6D0316EAE10F00C0A06E /* Convenience.m in Sources */,
+				F3EF9F371707EA1200BB80C9 /* x86_64_InstructionSize.m in Sources */,
+				F3EF9F381707EA1200BB80C9 /* x86_InstructionSize.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -346,6 +346,12 @@
     return nil;
 }
 
+-(mach_vm_size_t) sizeOfInstructionAtAddress: (mach_vm_address_t)address
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return 0;
+}
+
 -(void) terminate
 {
     mach_error_t err = task_terminate(self.task);
