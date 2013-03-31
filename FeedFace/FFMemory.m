@@ -106,6 +106,7 @@
 
 -(void) setSize: (mach_vm_size_t)newSize
 {
+    const vm_prot_t MaxProt = self.maxProtection, Prot = self.protection;
     if (((options & FFCanGrow) && (size < newSize)) || ((options & FFCanShrink) && (size > newSize)))
     {
         NSMutableData *OldData = [[[process dataAtAddress: address OfSize: size] mutableCopy] autorelease];
@@ -143,6 +144,8 @@
         }
         
         size = newSize;
+        self.maxProtection = MaxProt;
+        self.protection = Prot;
     }
 }
 
