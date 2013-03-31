@@ -72,6 +72,7 @@ typedef NSData *(^FFCODEINJECTOR_JUMPCODE)(mach_vm_address_t from, mach_vm_addre
 @property (readonly, retain) NSData *originalData;
 @property (readonly, copy) NSData *jumpCode;
 @property (readonly) mach_vm_address_t dlsymPtr;
+@property _Bool fillWithNops;
 
 +(FFCodeInjector*) injectCode: (NSData*)code ToAddress: (mach_vm_address_t)address InProcess: (FFProcess*)process;
 +(FFCodeInjector*) injectCode: (NSData*)code AdditionalInfo: (NSDictionary*)info ToAddress: (mach_vm_address_t)address InProcess: (FFProcess*)process;

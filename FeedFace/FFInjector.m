@@ -254,7 +254,7 @@ static FFINJECTION DataInjectionDisabler = (FFINJECTION)^(FFDataInjector *Inject
     _Bool isCodecave;
 }
 
-@synthesize address, originalData, jumpCode, dlsymPtr;
+@synthesize address, originalData, jumpCode, dlsymPtr, fillWithNops;
 
 +(FFCodeInjector*) injectCode: (NSData*)code ToAddress: (mach_vm_address_t)address InProcess: (FFProcess*)process
 {
@@ -475,6 +475,7 @@ static OSSpinLock JumpCodeLock = OS_SPINLOCK_INIT;
     
     [code release]; code = nil;
     [jump release]; jump = nil;
+    [retJump release]; retJump = nil;
     
     [super dealloc];
 }
