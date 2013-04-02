@@ -5,7 +5,7 @@
  * From:
  * NSLog(@"%@", [a description]);
  *
- * 0000000100001bf0	callq	0x100001c54 ## symbol stub for: _objc_msgSend
+ * 0000000100001be0	callq	0x100001c44 ## symbol stub for: _objc_msgSend
  * to
  * xorq %rax,%rax ; nop ; nop (nops will be automatically added by the framework)
  *
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         
         FFCodeInjector *InjectedCode = [FFCodeInjector injectCode: [NSData dataWithBytes: (uint8_t[]){
             0x48, 0x31, 0xc0 //xorq %rax,%rax
-        } length: 3] ToAddress: [Proc relocateAddress: 0x100001bf0] InProcess: Proc];
+        } length: 3] ToAddress: [Proc relocateAddress: 0x100001be0] InProcess: Proc];
         
         [InjectedCode enable];
     }
