@@ -22,7 +22,7 @@
     {
         a = 10;
         b = 0.2f;
-        c = [NSNumber numberWithInt: 4];
+        c = [[NSNumber alloc] initWithInt: 4];
     }
     
     return self;
