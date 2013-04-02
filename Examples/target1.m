@@ -33,6 +33,13 @@
     return [NSString stringWithFormat: @"<%@: %p:>(a=%d, b=%f, c=%@)", [self class], self, self.a, self.b, self.c];
 }
 
+-(void) dealloc
+{
+    [c release]; c = nil;
+    
+    [super dealloc];
+}
+
 @end
 
 

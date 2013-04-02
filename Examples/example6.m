@@ -68,13 +68,13 @@ int main(int argc, char *argv[])
         
         /*
          Codecave here:
-         0000000100001bfb	leaq	478(%rip), %rdi ## literal pool for: After:
-         0000000100001c02	movl	%eax, -88(%rbp)
-         0000000100001c05	movb	$0, %al
-         0000000100001c07	callq	0x100001c70 ## symbol stub for: _printf
+         0000000100001bbb	leaq	494(%rip), %rdi ## literal pool for: After:
+         0000000100001bc2	movl	%eax, -88(%rbp)
+         0000000100001bc5	movb	$0, %al
+         0000000100001bc7	callq	0x100001c30 ## symbol stub for: _printf
          */
         
-        FFCodeInjector *InjectedCode = [FFCodeInjector injectCodecaveToCode: [NSData dataWithBytes: &ModifierCode length: sizeof(ModifierCode)] FromAddress: [Proc relocateAddress: 0x100001bfb] InProcess: Proc];
+        FFCodeInjector *InjectedCode = [FFCodeInjector injectCodecaveToCode: [NSData dataWithBytes: &ModifierCode length: sizeof(ModifierCode)] FromAddress: [Proc relocateAddress: 0x100001bbb] InProcess: Proc];
         
         [InjectedCode enable];
     }
