@@ -2,7 +2,7 @@
  * Locates the string "some string" and replaces it with "new string".
  *
  *
- * Example output (when running: sudo ./example1 target1):
+ * Example output (when running: sudo ./example3 target1):
  * From target1:
  * Before:
  * 2013-03-09 12:31:36.783 target1[12005:707] <Test: 0x7b622a30:>(a=15, b=9999.000000, c=4)

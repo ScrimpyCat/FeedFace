@@ -3,7 +3,7 @@
  * the method from a super (if it's an overriden method).
  *
  *
- * Example output (when running: sudo ./example1 target1 Test description):
+ * Example output (when running: sudo ./example4 target1 Test description):
  * From target1:
  * Before:
  * 2013-03-09 15:25:00.148 target1[13281:707] <Test: 0x7f8ccb40a3e0:>(a=15, b=9999.000000, c=4)

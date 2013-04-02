@@ -13,7 +13,7 @@
  * NSLog(@"%@", nil);
  *
  *
- * Example output (when running: sudo ./example1 target1):
+ * Example output (when running: sudo ./example5 target1):
  * From target1:
  * Before:
  * 2013-03-31 16:09:05.767 target1[53148:707] <Test: 0x7fafa1c029f0:>(a=15, b=9999.000000, c=4)

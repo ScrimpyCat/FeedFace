@@ -4,7 +4,7 @@
  * object's property (a) to 1234. 
  *
  *
- * Example output (when running: sudo ./example1 target1):
+ * Example output (when running: sudo ./example6 target1):
  * From target1:
  * Before:
  * 2013-04-01 22:43:35.075 target1[57374:707] <Test: 0x7f97ca40a400:>(a=15, b=9999.000000, c=4)

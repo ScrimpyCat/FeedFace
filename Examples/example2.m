@@ -2,7 +2,7 @@
  * Displays a log of all the classes a process references.
  *
  *
- * Example output (when running: sudo ./example1 target1):
+ * Example output (when running: sudo ./example2 target1):
  * 2013-03-09 12:26:49.192 example2[11940:a07] 0x7fff7ba2ef68 : NSNumber
  * 2013-03-09 12:26:49.193 example2[11940:a07] 0x7fff7ba2daf0 : NSString
  * 2013-03-09 12:26:49.194 example2[11940:a07] 0x1021722f0 : Test
