@@ -199,6 +199,8 @@
 {
     [self release];
     
+    if (thePid == 0) return nil; //is kernal_task so task_for_pid will fail, later possibly add initWithTask: though all_image_info_addr will not be true either and many things will need to be handled differently.
+    
     vm_map_t Task;
     mach_error_t err = task_for_pid(mach_task_self(), thePid, &Task);
     if (err != KERN_SUCCESS)
