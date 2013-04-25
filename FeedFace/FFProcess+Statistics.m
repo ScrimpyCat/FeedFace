@@ -25,6 +25,8 @@
 
 #import "FFProcessPrivate.h"
 #import "FFThread.h"
+#import <mach/mach.h>
+#import <mach/task.h>
 
 @implementation FFProcess (Statistics)
 
@@ -39,6 +41,118 @@
 -(double) cpuUsagePercent
 {
     return ((double)self.cpuUsage / (double)TH_USAGE_SCALE) * 100.0;
+}
+
+-(uint64_t) faults
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.faults;
+}
+
+-(uint64_t) pageins
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.pageins;
+}
+
+-(uint64_t) copyOnWriteFaults
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.cow_faults;
+}
+
+-(uint64_t) messagesSent
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.messages_sent;
+}
+
+-(uint64_t) messagesReceived
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.messages_received;
+}
+
+-(uint64_t) machSystemCalls
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.syscalls_mach;
+}
+
+-(uint64_t) unixSystemCalls
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.syscalls_unix;
+}
+
+-(uint64_t) contextSwitches
+{
+    struct task_events_info EventsInfo;
+    mach_error_t err = task_info(self.task, TASK_EVENTS_INFO, (task_info_t)&EventsInfo, &(mach_msg_type_number_t){ TASK_EVENTS_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task events info query error: %u\n", err);
+        return 0;
+    }
+    
+    return EventsInfo.csw;
 }
 
 @end

@@ -146,6 +146,14 @@
 
 @property (readonly) uint64_t cpuUsage;
 @property (readonly) double cpuUsagePercent;
+@property (readonly) uint64_t faults;
+@property (readonly) uint64_t pageins;
+@property (readonly) uint64_t copyOnWriteFaults;
+@property (readonly) uint64_t messagesSent;
+@property (readonly) uint64_t messagesReceived;
+@property (readonly) uint64_t machSystemCalls;
+@property (readonly) uint64_t unixSystemCalls;
+@property (readonly) uint64_t contextSwitches;
 
 @end
 
