@@ -146,6 +146,13 @@
 
 @property (readonly) uint64_t cpuUsage;
 @property (readonly) double cpuUsagePercent;
+@property (readonly) mach_vm_size_t virtualSize;
+@property (readonly) mach_vm_size_t residentSize;
+@property (readonly) mach_vm_size_t residentSizeMax;
+@property (readonly) time_value_t userTime;
+@property (readonly) time_value_t systemTime;
+@property (readonly) policy_t policy;
+@property (readonly) uint64_t suspendCount;
 @property (readonly) uint64_t faults;
 @property (readonly) uint64_t pageins;
 @property (readonly) uint64_t copyOnWriteFaults;

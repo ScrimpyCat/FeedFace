@@ -43,6 +43,106 @@
     return ((double)self.cpuUsage / (double)TH_USAGE_SCALE) * 100.0;
 }
 
+//TODO: needs to be refactor
+
+-(mach_vm_size_t) virtualSize
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return 0;
+    }
+    
+    return BasicInfo.virtual_size;
+}
+
+-(mach_vm_size_t) residentSize
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return 0;
+    }
+    
+    return BasicInfo.resident_size;
+}
+
+-(mach_vm_size_t) residentSizeMax
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return 0;
+    }
+    
+    return BasicInfo.resident_size_max;
+}
+
+-(time_value_t) userTime
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return (time_value_t){ 0, 0 };
+    }
+    
+    return BasicInfo.user_time;
+}
+
+-(time_value_t) systemTime
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return (time_value_t){ 0, 0 };
+    }
+    
+    return BasicInfo.system_time;
+}
+
+-(policy_t) policy
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return 0;
+    }
+    
+    return BasicInfo.policy;
+}
+
+-(uint64_t) suspendCount
+{
+    struct mach_task_basic_info BasicInfo;
+    mach_error_t err = task_info(self.task, MACH_TASK_BASIC_INFO, (task_info_t)&BasicInfo, &(mach_msg_type_number_t){ MACH_TASK_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("task_info", err);
+        printf("Task basic info query error: %u\n", err);
+        return 0;
+    }
+    
+    return BasicInfo.suspend_count;
+}
+
 -(uint64_t) faults
 {
     struct task_events_info EventsInfo;
