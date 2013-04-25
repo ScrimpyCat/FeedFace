@@ -45,6 +45,7 @@
 +(FFProcess*) processWithIdentifier: (pid_t)pid;
 +(FFProcess*) processWithName: (NSString*)name;
 +(NSArray*) processesWithName: (NSString*)name;
++(NSArray*) processes;
 
 -(id) initWithProcessIdentifier: (pid_t)thePid; //override
 -(mach_vm_address_t) loadAddressForImage: (NSString*)image; //override

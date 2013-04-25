@@ -31,6 +31,7 @@
 
 #import <mach/mach.h>
 #import <mach/mach_vm.h>
+#import <mach/processor_set.h>
 #import <mach-o/dyld_images.h>
 #import <mach-o/loader.h>
 #import <libproc.h>
@@ -135,6 +136,63 @@
     free(Processes);
     
     return Procs;
+}
+
++(NSArray*) processes
+{
+    host_t Host = mach_host_self();
+    processor_set_name_array_t ProcessorSets;
+    mach_msg_type_number_t ProcSetsCount;
+    
+    kern_return_t err = host_processor_sets(Host, &ProcessorSets, &ProcSetsCount);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("host_processor_sets", err);
+        printf("Processor sets for host error: %u\n", err);
+        return nil;
+    }
+    
+    NSMutableArray *Processes = [NSMutableArray array];
+    for (mach_msg_type_number_t Loop = 0; Loop < ProcSetsCount; Loop++)
+    {
+        processor_set_t ControlSet;
+        err = host_processor_set_priv(Host, ProcessorSets[Loop], &ControlSet);
+        if (err != KERN_SUCCESS)
+        {
+            mach_error("host_processor_set_priv", err);
+            printf("Host processor set control port error: %u\n", err);
+            return nil;
+        }
+        
+        task_array_t Tasks;
+        mach_msg_type_number_t TaskCount;
+        err = processor_set_tasks(ControlSet, &Tasks, &TaskCount);
+        if (err != KERN_SUCCESS)
+        {
+            mach_error("processor_set_tasks", err);
+            printf("Tasks for processor set error: %u\n", err);
+            return nil;
+        }
+        
+        for (mach_msg_type_number_t Loop2 = 0; Loop2 < TaskCount; Loop2++)
+        {
+            pid_t Pid;
+            err = pid_for_task(Tasks[Loop2], &Pid);
+            if (err == KERN_SUCCESS)
+            {
+                FFProcess *Proc = [FFProcess processWithIdentifier: Pid];
+                if (Proc) [Processes addObject: Proc];
+            }
+        }
+        
+        mach_vm_deallocate(mach_task_self(), (mach_vm_address_t)Tasks, sizeof(task_t) * TaskCount);
+    }
+    
+    
+    mach_vm_deallocate(mach_task_self(), (mach_vm_address_t)ProcessorSets, sizeof(processor_set_t) * ProcSetsCount);
+    
+    
+    return Processes;
 }
 
 -(id) initWithProcessIdentifier: (pid_t)thePid
