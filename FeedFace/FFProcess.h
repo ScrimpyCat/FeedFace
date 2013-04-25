@@ -142,6 +142,12 @@
 
 @end
 
+@interface FFProcess (Statistics)
+
+@property (readonly) uint64_t cpuUsage;
+
+@end
+
 @interface FFProcess (InfoLogging)
 
 -(void) logOwnClasses;

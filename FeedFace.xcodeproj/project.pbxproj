@@ -32,6 +32,7 @@
 		F30B94251679EE6C003A1B01 /* NSValue+MachVMAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B94231679EE6B003A1B01 /* NSValue+MachVMAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F30B94261679EE6C003A1B01 /* NSValue+MachVMAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = F30B94241679EE6C003A1B01 /* NSValue+MachVMAddress.m */; };
 		F30B94311679F877003A1B01 /* FFProcessPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F30B942F1679F877003A1B01 /* FFProcessPrivate.h */; };
+		F30DAD0F1728E298006F85B3 /* FFProcess+Statistics.m in Sources */ = {isa = PBXBuildFile; fileRef = F30DAD0D1728E298006F85B3 /* FFProcess+Statistics.m */; };
 		F3281339167D155400485570 /* FFClass.h in Headers */ = {isa = PBXBuildFile; fileRef = F3281337167D155400485570 /* FFClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F328133A167D155400485570 /* FFClass.m in Sources */ = {isa = PBXBuildFile; fileRef = F3281338167D155400485570 /* FFClass.m */; };
 		F3281345167E6C5100485570 /* FFIvar.h in Headers */ = {isa = PBXBuildFile; fileRef = F3281343167E6C5000485570 /* FFIvar.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -129,6 +130,7 @@
 		F30B94231679EE6B003A1B01 /* NSValue+MachVMAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSValue+MachVMAddress.h"; sourceTree = "<group>"; };
 		F30B94241679EE6C003A1B01 /* NSValue+MachVMAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSValue+MachVMAddress.m"; sourceTree = "<group>"; };
 		F30B942F1679F877003A1B01 /* FFProcessPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFProcessPrivate.h; sourceTree = "<group>"; };
+		F30DAD0D1728E298006F85B3 /* FFProcess+Statistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FFProcess+Statistics.m"; sourceTree = "<group>"; };
 		F3281337167D155400485570 /* FFClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFClass.h; sourceTree = "<group>"; };
 		F3281338167D155400485570 /* FFClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFClass.m; sourceTree = "<group>"; };
 		F3281343167E6C5000485570 /* FFIvar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFIvar.h; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				F30B941C1679ED09003A1B01 /* FFProcess+Scanning.m */,
 				F3F1458D168B70EE0028D039 /* FFProcess+Writing.m */,
 				F3063055167CE69E0080EF76 /* FFProcess+InfoLogging.m */,
+				F30DAD0D1728E298006F85B3 /* FFProcess+Statistics.m */,
 				F30B940E16798E7F003A1B01 /* FFProcessx86_32.h */,
 				F30B940F16798E7F003A1B01 /* FFProcessx86_32.m */,
 				F30B94171679E603003A1B01 /* FFProcessx86_64.h */,
@@ -503,6 +506,7 @@
 				F35C6D0316EAE10F00C0A06E /* Convenience.m in Sources */,
 				F3EF9F371707EA1200BB80C9 /* x86_64_InstructionSize.m in Sources */,
 				F3EF9F381707EA1200BB80C9 /* x86_InstructionSize.m in Sources */,
+				F30DAD0F1728E298006F85B3 /* FFProcess+Statistics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
