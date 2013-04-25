@@ -36,4 +36,9 @@
     return TotalUsage;
 }
 
+-(double) cpuUsagePercent
+{
+    return ((double)self.cpuUsage / (double)TH_USAGE_SCALE) * 100.0;
+}
+
 @end

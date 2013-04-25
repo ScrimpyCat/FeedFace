@@ -145,6 +145,7 @@
 @interface FFProcess (Statistics)
 
 @property (readonly) uint64_t cpuUsage;
+@property (readonly) double cpuUsagePercent;
 
 @end
 

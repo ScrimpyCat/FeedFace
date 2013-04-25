@@ -160,6 +160,11 @@
     return ThreadInfo.cpu_usage;
 }
 
+-(double) cpuUsagePercent
+{
+    return ((double)self.cpuUsage / (double)TH_USAGE_SCALE) * 100.0;
+}
+
 -(void) pause
 {
     mach_error_t err = thread_suspend(threadAct);
