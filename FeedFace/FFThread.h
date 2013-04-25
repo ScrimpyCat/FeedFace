@@ -33,6 +33,7 @@
 @property (nonatomic, readonly) thread_act_t threadAct;
 @property (nonatomic) mach_vm_address_t pc;
 @property (nonatomic, readonly) _Bool isRunning;
+@property (nonatomic, readonly) uint64_t cpuUsage;
 
 +(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc;
 +(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess *)proc ShouldDestroy: (_Bool)destroy;

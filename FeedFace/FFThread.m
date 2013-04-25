@@ -146,6 +146,20 @@
     return ThreadInfo.run_state == TH_STATE_RUNNING;
 }
 
+-(uint64_t) cpuUsage
+{
+    thread_basic_info_data_t ThreadInfo;
+    mach_error_t err = thread_info(threadAct, THREAD_BASIC_INFO, (thread_info_t)&ThreadInfo, &(mach_msg_type_number_t){ THREAD_BASIC_INFO_COUNT });
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("thread_info", err);
+        printf("Thread info query error: %u\n", err);
+        return 0;
+    }
+    
+    return ThreadInfo.cpu_usage;
+}
+
 -(void) pause
 {
     mach_error_t err = thread_suspend(threadAct);
