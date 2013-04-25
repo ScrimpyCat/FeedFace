@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2012, Stefan Johnson                                                  
+ *  Copyright (c) 2012, 2013, Stefan Johnson                                                  
  *  All rights reserved.                                                                
  *                                                                                      
  *  Redistribution and use in source and binary forms, with or without modification,    
@@ -67,8 +67,17 @@
     /*
      proc_name uses proc_bsdinfo so only has room for MAXCOMLEN (16) of the process name. While this will work, it assumes process name hasn't been
      changed.
+     
+     Though kernal_task (0) won't return a path, but will return a name through proc_name. So as a backup fallback to proc_name.
      */
-    return [[FFProcess pathOfProcessWithIdentifier: pid] lastPathComponent];
+    NSString *Name = [[FFProcess pathOfProcessWithIdentifier: pid] lastPathComponent];
+    if (!Name)
+    {
+        char ProcName[PROC_PIDPATHINFO_MAXSIZE];
+        if (proc_name(pid, ProcName, sizeof(ProcName))) return Name = [NSString stringWithUTF8String: ProcName];
+    }
+    
+    return Name;
 }
 
 +(NSString*) pathOfProcessWithIdentifier: (pid_t)pid
