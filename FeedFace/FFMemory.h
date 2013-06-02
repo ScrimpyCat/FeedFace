@@ -43,6 +43,12 @@ typedef enum {
 @property (nonatomic, readonly) NSData *data;
 @property (nonatomic) vm_prot_t protection;
 @property (nonatomic) vm_prot_t maxProtection;
+@property (nonatomic) vm_inherit_t inheritance;
+@property (nonatomic, readonly) _Bool shared;
+@property (nonatomic, readonly) _Bool reserved;
+@property (nonatomic, readonly) memory_object_offset_t offset;
+@property (nonatomic) vm_behavior_t behaviour;
+@property (nonatomic, readonly) unsigned short userWiredCount;
 
 +(FFMemory*) allocateInProcess: (FFProcess*)process WithSize: (mach_vm_size_t)size;
 +(FFMemory*) allocateInProcess: (FFProcess*)process WithSize: (mach_vm_size_t)size IsPurgeable: (_Bool)purgeable;

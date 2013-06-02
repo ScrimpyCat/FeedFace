@@ -205,6 +205,134 @@
     }
 }
 
+-(vm_inherit_t) inheritance
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.inheritance;
+}
+
+-(void) setInheritance: (vm_inherit_t)inheritance
+{
+    mach_error_t err = mach_vm_inherit(process.task, address, size, inheritance);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_inherit", err);
+        printf("Inheritance error: %u\n", err);
+    }
+}
+
+-(_Bool) shared
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.shared;
+}
+
+-(_Bool) reserved
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.reserved;
+}
+
+-(memory_object_offset_t) offset
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.offset;
+}
+
+-(vm_behavior_t) behaviour
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.behavior;
+}
+
+-(void) setBehaviour: (vm_behavior_t)behaviour
+{
+    mach_error_t err = mach_vm_behavior_set(process.task, address, size, behaviour);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_behavior_set", err);
+        printf("Behaviour error: %u\n", err);
+    }
+}
+
+-(unsigned short) userWiredCount
+{
+    mach_vm_size_t RegionSize;
+    vm_region_basic_info_data_64_t Info;
+    mach_port_t ObjectName;
+    mach_msg_type_number_t Count = VM_REGION_BASIC_INFO_COUNT_64;
+    
+    mach_error_t err = mach_vm_region(process.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_BASIC_INFO_64, (vm_region_info_t)&Info, &Count, &ObjectName);
+    if (err != KERN_SUCCESS)
+    {
+        mach_error("mach_vm_region", err);
+        printf("Region error: %u\n", err);
+        return VM_PROT_NONE;
+    }
+    
+    return Info.user_wired_count;
+}
+
 -(void) dealloc
 {
     if ((options & FFFreeWhenDone) && (size))
