@@ -49,6 +49,11 @@
     
     
     err = mach_vm_protect(self.task, address, size, FALSE, Info.protection | VM_PROT_WRITE);
+    if (err == KERN_PROTECTION_FAILURE)
+    {
+        err = mach_vm_protect(self.task, address, size, FALSE, Info.protection | VM_PROT_WRITE | VM_PROT_COPY);
+    }
+    
     if (err != KERN_SUCCESS)
     {
         mach_error("mach_vm_protect", err);
