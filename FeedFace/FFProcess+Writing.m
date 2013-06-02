@@ -66,6 +66,27 @@
     }
     
     
+    if (Info.reserved)
+    {
+        /*
+         (temporary?) workaround as some regions may actually be executable but only have the read access right set. 
+         But when their protection is changed they copy, which changes their protection to (read and copy) which makes the 
+         old protection incorrect. Unsure of the correct way about handling this at the moment so will revisit in the future.
+         */
+        vm_region_extended_info_data_t EInfo;
+        Count = VM_REGION_EXTENDED_INFO_COUNT;
+        err = mach_vm_region(self.task, &(mach_vm_address_t){ address }, &RegionSize, VM_REGION_EXTENDED_INFO, (vm_region_info_t)&EInfo, &Count, &ObjectName);
+        if (err != KERN_SUCCESS)
+        {
+            mach_error("mach_vm_region", err);
+            printf("Region error: %u\n", err);
+            return;
+        }
+        
+        if (EInfo.user_tag == VM_MEMORY_UNSHARED_PMAP) return;
+    }
+    
+    
     err = mach_vm_protect(self.task, address, size, FALSE, Info.protection);
     if (err != KERN_SUCCESS)
     {
