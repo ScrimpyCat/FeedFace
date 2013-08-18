@@ -37,6 +37,7 @@
 {
     FFMemory *nameData;
     FFMemory *ivarLayoutData, *weakIvarLayoutData;
+    FFMemory *methodData;
 }
 
 #define ADDRESS_IN_CLASS(member) Address = self.address + PROC_OFFSET_OF(old_class, member);
@@ -73,6 +74,8 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
     
     mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, methodLists);
     mach_vm_address_t MethodList = [self.process addressAtAddress: Address];
+    if (!MethodList) return nil;
+    
     const size_t MethodSize = self.process.is64? sizeof(old_method64) : sizeof(old_method32);
     
     if (self.methodListIsNotArray)
@@ -111,7 +114,38 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
 
 -(void) setMethods: (NSArray*)methods
 {
+    mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, methodLists);
     
+    if (!methods)
+    {
+        [self.process writeAddress: 0 ToAddress: Address];
+        return;
+    }
+    
+    
+    const NSUInteger Count = [methods count];
+    const _Bool Is64 = self.process.is64;
+    if (!methodData) methodData = [FFMemory allocateInProcess: self.process WithSize: Is64? sizeof(old_method_list64) + (sizeof(old_method64) * Count) : sizeof(old_method_list32) + (sizeof(old_method32) * Count)];
+    else methodData.size = Is64? sizeof(old_method_list64) + (sizeof(old_method64) * Count) : sizeof(old_method_list32) + (sizeof(old_method32) * Count);
+    
+    self.methodListIsNotArray = YES;
+    
+    
+    const mach_vm_address_t MethodDataHeaderAddr = methodData.address;
+    const mach_vm_address_t MethodDataAddr = MethodDataHeaderAddr + PROC_OFFSET_OF(old_method_list, method_list);
+    const size_t Entsize = Is64? sizeof(old_method64) : sizeof(old_method32);
+    
+    NSUInteger Index = 0;
+    for (FFMethod *Method in methods)
+    {
+        if ([Method copyToAddress: MethodDataAddr + (Entsize * Index) InProcess: self.process]) Index++;
+    }
+    
+    
+    [self.process writeAddress: 0 ToAddress: MethodDataHeaderAddr + PROC_OFFSET_OF(old_method_list, obsolete)];
+    [self.process writeData: &(uint32_t){ (uint32_t)Index } OfSize: sizeof(uint32_t) ToAddress: MethodDataHeaderAddr + PROC_OFFSET_OF(old_method_list, method_count)];
+    
+    [self.process writeAddress: MethodDataHeaderAddr ToAddress: Address];
 }
 
 POINTER_TYPE_PROPERTY(FFCache, cache, setCache, ADDRESS_IN_CLASS(cache))
@@ -289,6 +323,7 @@ SINGLE_FLAG_TYPE_PROPERTY(isLeaf, setIsLeaf, info, CLS_LEAF)
     [nameData release]; nameData = nil;
     [ivarLayoutData release]; ivarLayoutData = nil;
     [weakIvarLayoutData release]; weakIvarLayoutData = nil;
+    [methodData release]; methodData = nil;
     
     [super dealloc];
 }
