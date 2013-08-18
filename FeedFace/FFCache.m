@@ -112,7 +112,7 @@
         size_t Index = 0, PointerSize = self.process.is64? sizeof(uint64_t) : sizeof(uint32_t);
         for (FFMethod *Method in buckets)
         {
-            [self.process writeAddress: ((FFMethod*)[Method injectTo: self.process]).address ToAddress: self.address + PROC_OFFSET_OF(struct objc_cache, buckets) + (Index * PointerSize)];
+            [self.process writeAddress: ((FFMethod*)[Method injectTo: self.process]).address ToAddress: self.address + PROC_OFFSET_OF(struct objc_cache, buckets) + (Index++ * PointerSize)];
         }
     }
 }
