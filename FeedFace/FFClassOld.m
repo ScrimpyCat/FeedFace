@@ -141,8 +141,9 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
     
     else
     {
+        const mach_vm_address_t ListTerminator = self.process.is64? (uint64_t)INT64_C(-1) : (uint32_t)INT32_C(-1);
         const size_t PointerSize = self.process.is64? sizeof(uint64_t) : sizeof(uint32_t);
-        for (mach_vm_address_t ListAddr; (ListAddr = [self.process addressAtAddress: MethodList]); MethodList += PointerSize)
+        for (mach_vm_address_t ListAddr; (ListAddr = [self.process addressAtAddress: MethodList]) && (ListAddr != ListTerminator); MethodList += PointerSize)
         {
             const mach_vm_address_t List = [self.process addressAtAddress: MethodList];
             const uint32_t *MethodCount = [self.process dataAtAddress: List + PROC_OFFSET_OF(old_method_list, method_count) OfSize: sizeof(uint32_t)].bytes;
