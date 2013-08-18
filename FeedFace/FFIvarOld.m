@@ -38,7 +38,7 @@
 
 -(mach_vm_address_t) offset
 {
-    const mach_vm_address_t Address = [self.process addressAtAddress: self.address + PROC_OFFSET_OF(old_ivar, ivar_offset)];
+    const mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_ivar, ivar_offset);
     const uint32_t *Offset = [self.process dataAtAddress: Address OfSize: sizeof(uint32_t)].bytes;
     
     return Offset? *Offset : 0;
@@ -46,7 +46,7 @@
 
 -(void) setOffset: (mach_vm_address_t)offset
 {
-    const mach_vm_address_t Address = [self.process addressAtAddress: self.address + PROC_OFFSET_OF(old_ivar, ivar_offset)];
+    const mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_ivar, ivar_offset);
     [self.process writeData: &(uint32_t){ (uint32_t)offset } OfSize: sizeof(uint32_t) ToAddress: Address];
 }
 
