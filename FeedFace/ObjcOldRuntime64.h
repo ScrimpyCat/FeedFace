@@ -81,6 +81,20 @@ typedef struct old_protocol64 {
     uint64_t /*struct objc_method_description_list * */ class_methods;
 } old_protocol64;
 
+typedef struct old_protocol_list64 {
+    uint64_t /*struct old_protocol_list * */ next;
+    uint64_t /*long */ count;
+    uint64_t /*struct old_protocol * */list/*[1]*/;
+} old_protocol_list64;
+
+typedef struct old_protocol_ext64 {
+    uint32_t size;
+    uint64_t /*struct objc_method_description_list * */ optional_instance_methods;
+    uint64_t /*struct objc_method_description_list * */ optional_class_methods;
+    uint64_t /*struct old_property_list * */ instance_properties;
+    uint64_t /*const char ** */ extendedMethodTypes;
+} old_protocol_ext64;
+
 //Method
 typedef struct old_method64 {
     uint64_t /*SEL */ method_name;
