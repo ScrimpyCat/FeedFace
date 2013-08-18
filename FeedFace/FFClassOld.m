@@ -30,6 +30,7 @@
 #import "FFMemory.h"
 #import "FFCache.h"
 #import "FFMethod.h"
+#import "FFIvar.h"
 
 #import "PropertyImpMacros.h"
 
@@ -60,7 +61,24 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
 
 -(NSArray*) ivars
 {
-    return nil;
+    NSMutableArray *Ivars = [NSMutableArray array];
+    
+    mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, ivars);
+    mach_vm_address_t IvarList = [self.process addressAtAddress: Address];
+    if (!IvarList) return nil;
+
+    const size_t IvarSize = self.process.is64? sizeof(old_ivar64) : sizeof(old_ivar32);
+    const uint32_t *IvarCount = [self.process dataAtAddress: IvarList + PROC_OFFSET_OF(old_ivar_list, ivar_count) OfSize: sizeof(uint32_t)].bytes;
+    if (!IvarCount) return nil;
+    
+    const mach_vm_address_t CurrentIvar = IvarList + PROC_OFFSET_OF(old_ivar_list, ivar_list);
+    for (size_t Loop = 0, Count = *IvarCount; Loop < Count; Loop++)
+    {
+        [Ivars addObject: [FFIvar ivarAtAddress: CurrentIvar + (Loop * IvarSize) InProcess: self.process]];
+    }
+    
+    
+    return Ivars;
 }
 
 -(void) setIvars: (NSArray*)ivars
