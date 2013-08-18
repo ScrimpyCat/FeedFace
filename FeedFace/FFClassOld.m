@@ -39,6 +39,7 @@
     FFMemory *nameData;
     FFMemory *ivarLayoutData, *weakIvarLayoutData;
     FFMemory *methodData;
+    FFMemory *ivarData;
 }
 
 #define ADDRESS_IN_CLASS(member) Address = self.address + PROC_OFFSET_OF(old_class, member);
@@ -83,7 +84,36 @@ DIRECT_TYPE_PROPERTY(uint32_t, instanceSize, setInstanceSize, ADDRESS_IN_CLASS(i
 
 -(void) setIvars: (NSArray*)ivars
 {
+    mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, ivars);
     
+    if (!ivars)
+    {
+        [self.process writeAddress: 0 ToAddress: Address];
+        return;
+    }
+    
+    
+    const NSUInteger Count = [ivars count];
+    const _Bool Is64 = self.process.is64;
+    if (!ivarData) ivarData = [FFMemory allocateInProcess: self.process WithSize: Is64? sizeof(old_ivar_list64) + (sizeof(old_ivar64) * Count) : sizeof(old_ivar_list32) + (sizeof(old_ivar32) * Count)];
+    else ivarData.size = Is64? sizeof(old_ivar_list64) + (sizeof(old_ivar64) * Count) : sizeof(old_ivar_list32) + (sizeof(old_ivar32) * Count);
+    
+    
+    const mach_vm_address_t IvarDataHeaderAddr = ivarData.address;
+    const mach_vm_address_t IvarDataAddr = IvarDataHeaderAddr + PROC_OFFSET_OF(old_ivar_list, ivar_list);
+    const size_t Entsize = Is64? sizeof(old_ivar64) : sizeof(old_ivar32);
+    
+    NSUInteger Index = 0;
+    for (FFIvar *Ivar in ivars)
+    {
+        if ([Ivar copyToAddress: IvarDataAddr + (Entsize * Index) InProcess: self.process]) Index++;
+    }
+    
+    
+    [self.process writeData: &(uint32_t){ (uint32_t)Index } OfSize: sizeof(uint32_t) ToAddress: IvarDataHeaderAddr + PROC_OFFSET_OF(old_ivar_list, ivar_count)];
+    
+    [self.process writeAddress: IvarDataHeaderAddr ToAddress: Address];
+
 }
 
 -(NSArray*) methods
@@ -342,6 +372,7 @@ SINGLE_FLAG_TYPE_PROPERTY(isLeaf, setIsLeaf, info, CLS_LEAF)
     [ivarLayoutData release]; ivarLayoutData = nil;
     [weakIvarLayoutData release]; weakIvarLayoutData = nil;
     [methodData release]; methodData = nil;
+    [ivarData release]; ivarData = nil;
     
     [super dealloc];
 }
