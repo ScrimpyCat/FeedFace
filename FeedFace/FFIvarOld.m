@@ -24,7 +24,42 @@
  */
 
 #import "FFIvarOld.h"
+#import "ObjcOldRuntime32.h"
+#import "ObjcOldRuntime64.h"
+#import "FFProcess.h"
+#import "FFMemory.h"
+
+#import "PropertyImpMacros.h"
 
 @implementation FFIvarOld
+{
+    FFMemory *nameData, *typeData;
+}
+
+-(mach_vm_address_t) offset
+{
+    const mach_vm_address_t Address = [self.process addressAtAddress: self.address + PROC_OFFSET_OF(old_ivar, ivar_offset)];
+    const uint32_t *Offset = [self.process dataAtAddress: Address OfSize: sizeof(uint32_t)].bytes;
+    
+    return Offset? *Offset : 0;
+}
+
+-(void) setOffset: (mach_vm_address_t)offset
+{
+    const mach_vm_address_t Address = [self.process addressAtAddress: self.address + PROC_OFFSET_OF(old_ivar, ivar_offset)];
+    [self.process writeData: &(uint32_t){ (uint32_t)offset } OfSize: sizeof(uint32_t) ToAddress: Address];
+}
+
+STRING_TYPE_PROPERTY(name, setName, Address = self.address + PROC_OFFSET_OF(old_ivar, ivar_name))
+STRING_TYPE_PROPERTY(type, setType, Address = self.address + PROC_OFFSET_OF(old_ivar, ivar_type))
+
+-(void) dealloc
+{
+    [nameData release]; nameData = nil;
+    [typeData release]; typeData = nil;
+    
+    
+    [super dealloc];
+}
 
 @end
