@@ -107,3 +107,13 @@ typedef struct old_method_list32 {
     /* variable length structure */
     uint32_t /*struct old_method */ method_list/*[1]*/;
 } old_method_list32;
+
+typedef struct objc_method_description32 {
+	uint32_t /*SEL */ name;
+	uint32_t /*char * */types;
+} objc_method_description32;
+
+typedef struct objc_method_description_list32 {
+    uint32_t /*int */ count;
+    objc_method_description32 /*struct objc_method_description */ list/*[1]*/;
+} objc_method_description_list32;

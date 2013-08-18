@@ -112,3 +112,14 @@ typedef struct old_method_list64 {
     /* variable length structure */
     uint64_t /*struct old_method */ method_list/*[1]*/;
 } old_method_list64;
+
+typedef struct objc_method_description64 {
+	uint64_t /*SEL */ name;
+	uint64_t /*char * */types;
+} objc_method_description64;
+
+typedef struct objc_method_description_list64 {
+    uint32_t /*int */ count;
+    objc_method_description64 /*struct objc_method_description */ list/*[1]*/;
+} objc_method_description_list64;
+
