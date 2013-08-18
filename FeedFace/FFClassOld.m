@@ -31,6 +31,7 @@
 #import "FFCache.h"
 #import "FFMethod.h"
 #import "FFIvar.h"
+#import "FFProtocol.h"
 
 #import "PropertyImpMacros.h"
 
@@ -201,7 +202,28 @@ POINTER_TYPE_PROPERTY(FFCache, cache, setCache, ADDRESS_IN_CLASS(cache))
 
 -(NSArray*) protocols
 {
-    return nil;
+    NSMutableArray *Protocols = [NSMutableArray array];
+    
+    mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_class, protocols);
+    mach_vm_address_t ProtocolList = [self.process addressAtAddress: Address];
+    if (!ProtocolList) return nil;
+    
+    const size_t ProtocolSize = self.process.is64? sizeof(old_protocol64) : sizeof(old_protocol32);
+    
+    for ( ; ProtocolList; ProtocolList = [self.process addressAtAddress: ProtocolList + PROC_OFFSET_OF(old_protocol_list, next)])
+    {
+        const void *ProtocolCount = [self.process dataAtAddress: ProtocolList + PROC_OFFSET_OF(old_protocol_list, count) OfSize: self.process.is64? sizeof(uint64_t) : sizeof(uint32_t)].bytes;
+        if (!ProtocolCount) continue;
+        
+        const mach_vm_address_t CurrentProtocol = [self.process addressAtAddress: ProtocolList + PROC_OFFSET_OF(old_protocol_list, list)];
+        for (size_t Loop = 0, Count = self.process.is64? *(uint64_t*)ProtocolCount : *(uint32_t*)ProtocolCount; Loop < Count; Loop++)
+        {
+            [Protocols addObject: [FFProtocol protocolAtAddress: CurrentProtocol + (Loop * ProtocolSize) InProcess: self.process]];
+        }
+    }
+    
+    
+    return Protocols;
 }
 
 -(void) setProtocols: (NSArray*)protocols
