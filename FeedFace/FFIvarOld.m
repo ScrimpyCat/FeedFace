@@ -36,6 +36,22 @@
     FFMemory *nameData, *typeData;
 }
 
+-(id) copyToAddress: (mach_vm_address_t)address InProcess: (FFProcess *)proc
+{
+    FFIvarOld *Ivar = [super copyToAddress: address InProcess: proc];
+    
+    Ivar.name = self.name;
+    Ivar.type = self.type;
+    Ivar.offset = self.offset;
+    
+    return Ivar;
+}
+
+-(NSUInteger) dataSize
+{
+    return self.process.is64? sizeof(old_ivar64) : sizeof(old_ivar32);
+}
+
 -(mach_vm_address_t) offset
 {
     const mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_ivar, ivar_offset);
