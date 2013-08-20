@@ -41,6 +41,7 @@
     FFMemory *ivarLayoutData, *weakIvarLayoutData;
     FFMemory *methodData;
     FFMemory *ivarData;
+    FFMemory *protocolData;
 }
 
 #define ADDRESS_IN_CLASS(member) Address = self.address + PROC_OFFSET_OF(old_class, member);
@@ -228,7 +229,34 @@ POINTER_TYPE_PROPERTY(FFCache, cache, setCache, ADDRESS_IN_CLASS(cache))
 
 -(void) setProtocols: (NSArray*)protocols
 {
+    const mach_vm_address_t Address = self.address + PROC_OFFSET_OF(old_protocol, protocol_list);
     
+    if (!protocols)
+    {
+        [self.process writeAddress: 0 ToAddress: Address];
+        return;
+    }
+    
+    const NSUInteger Count = [protocols count];
+    const _Bool Is64 = self.process.is64;
+    if (!protocolData) protocolData = [FFMemory allocateInProcess: self.process WithSize: Is64? sizeof(old_protocol_list64) + (sizeof(old_protocol64) * Count) : sizeof(old_protocol_list32) + (sizeof(old_protocol32) * Count)];
+    else protocolData.size = Is64? sizeof(old_protocol_list64) + (sizeof(old_protocol64) * Count) : sizeof(old_protocol_list32) + (sizeof(old_protocol32) * Count);
+    
+    const mach_vm_address_t ProtocolDataHeaderAddr = protocolData.address;
+    const mach_vm_address_t ProtocolDataAddr = ProtocolDataHeaderAddr + PROC_OFFSET_OF(old_protocol_list, list);
+    const size_t Entsize = Is64? sizeof(old_protocol64) : sizeof(old_protocol32);
+    
+    NSUInteger Index = 0;
+    for (FFProtocol *Protocol in protocols)
+    {
+        if ([Protocol copyToAddress: ProtocolDataAddr + (Entsize * Index) InProcess: self.process]) Index++;
+    }
+    
+    
+    [self.process writeAddress: 0 ToAddress: ProtocolDataHeaderAddr + PROC_OFFSET_OF(old_protocol_list, next)];
+    [self.process writeData: Is64? (void*)&(uint64_t){ (uint64_t)Index } : (void*)&(uint32_t){ (uint32_t)Index } OfSize: Is64? sizeof(uint64_t) : sizeof(uint32_t) ToAddress: ProtocolDataHeaderAddr + PROC_OFFSET_OF(old_protocol_list, count)];
+    
+    [self.process writeAddress: ProtocolDataHeaderAddr ToAddress: Address];
 }
 
 // CLS_EXT only
@@ -396,6 +424,7 @@ SINGLE_FLAG_TYPE_PROPERTY(isLeaf, setIsLeaf, info, CLS_LEAF)
     [weakIvarLayoutData release]; weakIvarLayoutData = nil;
     [methodData release]; methodData = nil;
     [ivarData release]; ivarData = nil;
+    [protocolData release]; protocolData = nil;
     
     [super dealloc];
 }
