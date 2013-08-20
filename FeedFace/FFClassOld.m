@@ -26,6 +26,7 @@
 #import "FFClassOld.h"
 #import "ObjcOldRuntime32.h"
 #import "ObjcOldRuntime64.h"
+#import "NSValue+MachVMAddress.h"
 #import "FFProcess.h"
 #import "FFMemory.h"
 #import "FFCache.h"
@@ -42,6 +43,94 @@
     FFMemory *methodData;
     FFMemory *ivarData;
     FFMemory *protocolData;
+}
+
+-(NSUInteger) dataSize
+{
+    const _Bool HasExt = self.hasExtension;
+    return self.process.is64? sizeof(old_class64) + (HasExt? sizeof(old_class_ext64) : 0) : sizeof(old_class32) + (HasExt? sizeof(old_class_ext32) : 0);
+}
+
+-(id) copyToAddress: (mach_vm_address_t)addr InProcess: (FFProcess*)proc
+{
+    if (addr) return nil;
+    /*
+     All subsequent calls after FirstCopy must remain on same thread.
+     */
+    
+    _Bool FirstCopy = NO;
+    static NSMapTable * volatile CopiedTables = nil;
+    if (!CopiedTables)
+    {
+        if (OSAtomicCompareAndSwapPtrBarrier(nil, [NSMapTable mapTableWithStrongToStrongObjects], (void**)&CopiedTables)) [CopiedTables retain];
+    }
+    
+    NSThread *CurrentThread = [NSThread currentThread];
+    NSMutableDictionary *CopiedTable = [CopiedTables objectForKey: CurrentThread];
+    if ((!CopiedTable) || ((id)CopiedTable == [NSNull null]))
+    {
+        CopiedTable = [NSMutableDictionary dictionary];
+        [CopiedTables setObject: CopiedTable forKey: CurrentThread];
+        FirstCopy = YES;
+    }
+    
+    FFClass *CopiedClass = [CopiedTable objectForKey: [NSValue valueWithAddress: self.address]];
+    if (CopiedClass) return CopiedClass;
+    
+    
+    const _Bool  Is64 = self.process.is64;
+    NSMutableData *Data = [[[self.process dataAtAddress: self.address OfSize: Is64? sizeof(old_class64) : sizeof(old_class32)] mutableCopy] autorelease];
+    
+    //NULL out all members used in -expose
+    void *Cls = Data.mutableBytes;
+    if (!Cls) return nil;
+    if (Is64)
+    {
+        ((old_class64*)Cls)->isa = 0;
+        ((old_class64*)Cls)->super_class = 0;
+    }
+    
+    else
+    {
+        ((old_class32*)Cls)->isa = 0;
+        ((old_class32*)Cls)->super_class = 0;
+    }
+    
+    [proc write: Data ToAddress: addr];
+    
+    
+    FFClassOld *ClassCopy = [[self class] classAtAddress: addr InProcess: proc];
+    [CopiedTable setObject: ClassCopy forKey: [NSValue valueWithAddress: self.address]];
+    
+    ClassCopy.isa = self.isa;
+    ClassCopy.superclass = self.superclass;
+    ClassCopy.name = self.name;
+    ClassCopy.version = self.version;
+    ClassCopy.info = self.info;
+    ClassCopy.instanceSize = self.instanceSize;
+    ClassCopy.ivars = self.ivars;
+    ClassCopy.methods = self.methods;
+    ClassCopy.cache = self.cache;
+    ClassCopy.protocols = self.protocols;
+    
+    if (self.ext)
+    {
+        ClassCopy.ivarLayout = self.ivarLayout;
+        
+        ClassCopy.ext = addr + (Is64? sizeof(old_class64) : sizeof(old_class32));
+        
+        ClassCopy.size = self.size;
+        ClassCopy.weakIvarLayout = self.weakIvarLayout;
+        ClassCopy.properties = self.properties;
+    }
+    
+    if (FirstCopy)
+    {
+        [CopiedTables setObject: [NSNull null] forKey: CurrentThread];
+    }
+    
+    
+    return ClassCopy;
 }
 
 #define ADDRESS_IN_CLASS(member) Address = self.address + PROC_OFFSET_OF(old_class, member);
