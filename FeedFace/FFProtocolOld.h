@@ -27,4 +27,10 @@
 
 @interface FFProtocolOld : FFProtocol
 
+@property (nonatomic, copy) FFClass *isa;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSArray *protocols;
+@property (nonatomic, copy) NSArray *instanceMethods;
+@property (nonatomic, copy) NSArray *classMethods;
+
 @end

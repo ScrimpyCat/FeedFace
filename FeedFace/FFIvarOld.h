@@ -27,4 +27,8 @@
 
 @interface FFIvarOld : FFIvar
 
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *type;
+@property (nonatomic) mach_vm_address_t offset;
+
 @end
