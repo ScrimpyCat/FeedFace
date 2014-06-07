@@ -299,6 +299,12 @@
     return self.pid;
 }
 
+-(mach_vm_size_t) sharedCacheSlide
+{
+    NSLog(@"Error: trying to use placeholder class or need to override in subclass");
+    return 0;
+}
+
 -(mach_vm_address_t) loadAddressForImage: (NSString*)image
 {
     NSLog(@"Error: trying to use placeholder class or need to override in subclass");

@@ -312,6 +312,18 @@ mach_vm_address_t FFImageInProcessAddressOfSymbol(FFProcess *Process, mach_vm_ad
     return Address;
 }
 
+_Bool FFImageUsesSharedCacheSlide(FFProcess *Process, mach_vm_address_t ImageLoadAddress)
+{
+    __block _Bool UsesSharedCacheSlide = FALSE;
+    FFImageInProcess(Process, ImageLoadAddress, Process.is64? (FFIMAGE_ACTION)^(const struct mach_header_64 *data){
+        UsesSharedCacheSlide = data->flags & 0x80000000;
+    } : (FFIMAGE_ACTION)^(const struct mach_header *data){
+        UsesSharedCacheSlide = data->flags & 0x80000000;
+    }, NULL, NULL);
+
+    return UsesSharedCacheSlide;
+}
+
 void FFImageInFile(NSString *ImagePath, cpu_type_t CPUType, FFIMAGE_FILE_ACTION ImageHeaderAction, FFIMAGE_FILE_ACTION ImageLoadCommandsAction, FFIMAGE_FILE_ACTION ImageDataAction)
 {
     if ((ImageHeaderAction) || (ImageLoadCommandsAction) || (ImageDataAction))

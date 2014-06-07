@@ -109,6 +109,11 @@
     return self;
 }
 
+-(mach_vm_size_t) sharedCacheSlide
+{
+    return imageInfos.sharedCacheSlide;
+}
+
 -(mach_vm_address_t) loadAddressForImage: (NSString*)image
 {
     mach_vm_address_t ImageLoadAddress = 0;
@@ -147,7 +152,8 @@
     
     __block mach_vm_address_t Slide;
     FFImageInProcess(self, ImageLoadAddress, (FFIMAGE_ACTION)^(const struct mach_header *data){
-        if (data->flags & MH_PIE) Slide = 0x1000;
+        if (FFImageUsesSharedCacheSlide(self, ImageLoadAddress)) Slide = [self sharedCacheSlide];
+        else if (data->flags & MH_PIE) Slide = 0x1000;
         else Slide = 0;
     }, NULL, NULL);
     

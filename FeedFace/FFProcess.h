@@ -60,6 +60,7 @@
 -(NSArray*) threads;
 -(thread_state_flavor_t) threadStateKind;
 -(mach_vm_address_t) addressForSymbol: (NSString*)symbol InImage: (NSString*)image;
+-(mach_vm_size_t) sharedCacheSlide; //override
 
 //convenient code
 -(NSData*) jumpCodeToAddress: (mach_vm_address_t)toAddr FromAddress: (mach_vm_address_t)fromAddr; //override
