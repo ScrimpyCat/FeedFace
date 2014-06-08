@@ -35,6 +35,16 @@
 
 @synthesize process, threadAct;
 
++(FFThread*) emptyThreadInProcess: (FFProcess*)proc
+{
+    return nil; //todo: a plain mach thread
+}
+
++(FFThread*) threadInProcess: (FFProcess*)proc
+{
+    return nil; //todo: a mach thread with initialized pthread and cthread
+}
+
 +(FFThread*) threadForThread: (thread_act_t)threadAct InProcess: (FFProcess*)proc
 {
     return [[[FFThread alloc] initWithThread: threadAct InProcess: proc ShouldDestroy: NO] autorelease];
