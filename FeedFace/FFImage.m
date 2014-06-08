@@ -284,10 +284,10 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
                 const struct section_64 *Section = (const void*)data + sizeof(struct segment_command_64);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
-                    if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))
+                    if ((VMAddress >= Section[Loop].addr) && (VMAddress <= (Section[Loop].addr + Section[Loop].size)))
                     {
-                        if (Segment) *Segment = [NSString stringWithUTF8String: Section->segname];
-                        SectionName = [NSString stringWithUTF8String: Section->sectname];
+                        if (Segment) *Segment = [NSString stringWithUTF8String: Section[Loop].segname];
+                        SectionName = [NSString stringWithUTF8String: Section[Loop].sectname];
                     }
                     
                     SectionLoadCommand += sizeof(struct section_64);
@@ -306,10 +306,10 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
                 const struct section *Section = (const void*)data + sizeof(struct segment_command);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
-                    if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))
+                    if ((VMAddress >= Section[Loop].addr) && (VMAddress <= (Section[Loop].addr + Section[Loop].size)))
                     {
-                        if (Segment) *Segment = [NSString stringWithUTF8String: Section->segname];
-                        SectionName = [NSString stringWithUTF8String: Section->sectname];
+                        if (Segment) *Segment = [NSString stringWithUTF8String: Section[Loop].segname];
+                        SectionName = [NSString stringWithUTF8String: Section[Loop].sectname];
                     }
                     
                     SectionLoadCommand += sizeof(struct section);
