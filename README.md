@@ -7,11 +7,15 @@ Notes:
 --
 It is currently a work in progress, so there's a lot of functionality that still needs to be added. So it may not be particularly useful as it currently stands. It also should be noted that most development goes towards targeting x86_64 processes, while 32 bit processes come later; same with the focus being on the new Obj-C runtime, while old runtime will be worked on later.
 
-I'm taking a rapid prototyping approach with how I'm developing it, so expect chunks of code to be removed/changed from time to time (this can introduce bugs, so expect them; because of the nature of the project you should expect bugs anyway) and for certain features to go untested.
 
-To-do:
+Versions:
 --
-Tasks can be found here: https://www.pivotaltracker.com/projects/741519/stories
+Versions currently imply the latest standalone builds. So these are builds which may not be compatible with the commits that follow. The main reason for this is when the runtime updates there may be incompatible changes. Ideally this should be detected an handled automatically so all versions can be handled in the same build and framework choose what's appropriate (or at the worst you specify the latest runtime build). But instead for the time being this will just be marked by tags, and from then on work is on the next awaiting tag.
+
+The current tag versions and what their latest support runtime version is (or any other reasoning) can be seen below:
+
+v1.0 -> objc4-532.x (some incompatible flag value changes in more recent versions), pre-Mavericks?
+
 
 Installation:
 --
