@@ -1,6 +1,6 @@
 /*
- *  Original Code: http://www.opensource.apple.com/source/objc4/objc4-532/runtime/objc-runtime-new.h
- *  Modified by Stefan Johnson on 16/12/12.
+ *  Original Code: http://www.opensource.apple.com/source/objc4/objc4-551.1/runtime/objc-runtime-new.h
+ *  Modified by Stefan Johnson on 8/6/14.
  *  Modification notes:
  *  - Removed all code except for the RW and RO flags, and any structures that can be applied for both 32 bit and 64 bit processes.
  *  - The method_list_t structure has been modified to remove the "first" member.
@@ -9,16 +9,16 @@
 
 /*
  * Copyright (c) 2005-2007 Apple Inc.  All Rights Reserved.
- * 
+ *
  * @APPLE_LICENSE_HEADER_START@
- * 
+ *
  * This file contains Original Code and/or Modifications of Original Code
  * as defined in and that are subject to the Apple Public Source License
  * Version 2.0 (the 'License'). You may not use this file except in
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -26,7 +26,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  */
 
@@ -55,6 +55,8 @@
 // #define RO_REUSE_ME           (1<<6) 
 // class compiled with -fobjc-arc (automatic retain/release)
 #define RO_IS_ARR             (1<<7)
+// class has .cxx_destruct but no .cxx_construct (with RO_HAS_CXX_STRUCTORS)
+#define RO_HAS_CXX_DTOR_ONLY  (1<<8)
 
 // class is in an unloadable bundle - must never be set by compiler
 #define RO_FROM_BUNDLE        (1<<29)
@@ -88,18 +90,29 @@
 #define RW_SPECIALIZED_VTABLE (1<<22)
 // class instances may have associative references
 #define RW_INSTANCES_HAVE_ASSOCIATED_OBJECTS (1<<21)
+// class or superclass has .cxx_construct implementation
+#define RW_HAS_CXX_CTOR       (1<<20)
+// class or superclass has .cxx_destruct implementation
+#define RW_HAS_CXX_DTOR       (1<<19)
 // class or superclass has .cxx_construct/destruct implementations
-#define RW_HAS_CXX_STRUCTORS  (1<<20)
+#define RW_HAS_CXX_STRUCTORS  (RW_HAS_CXX_CTOR | RW_HAS_CXX_DTOR)
 // class has instance-specific GC layout
-#define RW_HAS_INSTANCE_SPECIFIC_LAYOUT (1 << 19)
+#define RW_HAS_INSTANCE_SPECIFIC_LAYOUT (1 << 18)
 // class's method list is an array of method lists
-#define RW_METHOD_ARRAY       (1<<18)
-
-#if !CLASS_FAST_FLAGS_VIA_RW_DATA
-// class or superclass has custom retain/release/autorelease/retainCount
-#   define RW_HAS_CUSTOM_RR      (1<<17)
+#define RW_METHOD_ARRAY       (1<<17)
 // class or superclass has custom allocWithZone: implementation
-#   define RW_HAS_CUSTOM_AWZ     (1<<16)
+#define RW_HAS_CUSTOM_AWZ     (1<<16)
+// class or superclass has custom retain/release/autorelease/retainCount
+#define RW_HAS_CUSTOM_RR   (1<<15)
+
+// Flags may be stored in low bits of rw->data_NEVER_USE for fastest access
+#define CLASS_FAST_FLAG_MASK 3
+#if CLASS_FAST_FLAGS_VIA_RW_DATA
+// reserved for future expansion
+#   define CLASS_FAST_FLAG_RESERVED       (1<<0)
+// class or superclass has custom retain/release/autorelease/retainCount
+#   define CLASS_FAST_FLAG_HAS_CUSTOM_RR  (1<<1)
+#   undef RW_HAS_CUSTOM_RR
 #endif
 
 
