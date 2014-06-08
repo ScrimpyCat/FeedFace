@@ -442,3 +442,27 @@ _Bool FFImageInFileContainsSymbol(NSString *ImagePath, cpu_type_t CPUType, NSStr
     
     return Found;
 }
+
+NSString *FFImageInFileSegmentContainingAddress(NSString *ImagePath, cpu_type_t CPUType, mach_vm_address_t Address)
+{
+    __block NSString *Segment = nil;
+    FFImageInFile(ImagePath, CPUType, NULL, CPUType & CPU_ARCH_ABI64? (FFIMAGE_FILE_ACTION)^(const void *file, const void *image, const struct segment_command_64 *data){
+        if (data->cmd == LC_SEGMENT_64)
+        {
+            if ((Address >= data->vmaddr) && (Address <= (data->vmaddr + data->vmsize)))
+            {
+                Segment = [NSString stringWithUTF8String: data->segname];
+            }
+        }
+    } : (FFIMAGE_FILE_ACTION)^(const void *file, const void *image, const struct segment_command *data){
+        if (data->cmd == LC_SEGMENT)
+        {
+            if ((Address >= data->vmaddr) && (Address <= (data->vmaddr + data->vmsize)))
+            {
+                Segment = [NSString stringWithUTF8String: data->segname];
+            }
+        }
+    }, NULL);
+    
+    return Segment;
+}
