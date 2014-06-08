@@ -126,17 +126,19 @@ uint64_t FFImageStructureSizeInProcess(FFProcess *Process, mach_vm_address_t Ima
 
 _Bool FFImageInProcessContainsVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress)
 {
+    mach_vm_size_t Slide = FFImageInProcessUsesSharedCacheSlide(Process, ImageLoadAddress)? [Process sharedCacheSlide] : 0;
+    
     __block _Bool ContainsAddress = NO;
     FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
-            const mach_vm_address_t Addr = data->vmaddr;
+            const mach_vm_address_t Addr = data->vmaddr + Slide;
             if ((Addr <= VMAddress) && ((Addr + data->vmsize) > VMAddress)) ContainsAddress = YES;  
         }
     } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
-            const mach_vm_address_t Addr = data->vmaddr;
+            const mach_vm_address_t Addr = data->vmaddr + Slide;
             if ((Addr <= VMAddress) && ((Addr + data->vmsize) > VMAddress)) ContainsAddress = YES;  
         }
     }, NULL);
@@ -224,11 +226,13 @@ _Bool FFImageInProcessContainsSection(FFProcess *Process, mach_vm_address_t Imag
 
 NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress)
 {
+    mach_vm_size_t Slide = FFImageInProcessUsesSharedCacheSlide(Process, ImageLoadAddress)? [Process sharedCacheSlide] : 0;
+    
     __block NSString *Segment = nil;
     FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
-            if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
+            if ((VMAddress >= (data->vmaddr + Slide)) && (VMAddress <= (data->vmaddr + Slide + data->vmsize)))
             {
                 Segment = [NSString stringWithUTF8String: data->segname];
             }
@@ -236,7 +240,7 @@ NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm
     } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
-            if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
+            if ((VMAddress >= (data->vmaddr + Slide)) && (VMAddress <= (data->vmaddr + Slide + data->vmsize)))
             {
                 Segment = [NSString stringWithUTF8String: data->segname];
             }
@@ -248,20 +252,22 @@ NSString *FFImageInProcessSegmentContainingVMAddress(FFProcess *Process, mach_vm
 
 NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm_address_t ImageLoadAddress, mach_vm_address_t VMAddress, NSString **Segment)
 {
+    mach_vm_size_t Slide = FFImageInProcessUsesSharedCacheSlide(Process, ImageLoadAddress)? [Process sharedCacheSlide] : 0;
+    
     __block NSString *SectionName = nil;
     __block mach_vm_address_t SectionLoadCommand = ImageLoadAddress + (Process.is64? sizeof(struct mach_header_64) : sizeof(struct mach_header));
     
     FFImageInProcess(Process, ImageLoadAddress, NULL, Process.is64? (FFIMAGE_ACTION)^(const struct segment_command_64 *data){
         if (data->cmd == LC_SEGMENT_64)
         {
-            if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
+            if ((VMAddress >= (data->vmaddr + Slide)) && (VMAddress <= (data->vmaddr + Slide + data->vmsize)))
             {
                 SectionLoadCommand += sizeof(struct segment_command_64);
                 size_t SectCount = data->nsects;
                 const struct section_64 *Section = (const void*)data + sizeof(struct segment_command_64);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
-                    if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))
+                    if ((VMAddress >= (Section->addr + Slide)) && (VMAddress <= (Section->addr + Slide + Section->size)))
                     {
                         if (Segment) *Segment = [NSString stringWithUTF8String: Section->segname];
                         SectionName = [NSString stringWithUTF8String: Section->sectname];
@@ -276,14 +282,14 @@ NSString *FFImageInProcessSectionContainingVMAddress(FFProcess *Process, mach_vm
     } : (FFIMAGE_ACTION)^(const struct segment_command *data){
         if (data->cmd == LC_SEGMENT)
         {
-            if ((VMAddress >= data->vmaddr) && (VMAddress <= (data->vmaddr + data->vmsize)))
+            if ((VMAddress >= (data->vmaddr + Slide)) && (VMAddress <= (data->vmaddr + Slide + data->vmsize)))
             {
                 SectionLoadCommand += sizeof(struct segment_command);
                 size_t SectCount = data->nsects;
                 const struct section *Section = (const void*)data + sizeof(struct segment_command);
                 for (size_t Loop = 0; Loop < SectCount; Loop++)
                 {
-                    if ((VMAddress >= Section->addr) && (VMAddress <= (Section->addr + Section->size)))
+                    if ((VMAddress >= (Section->addr + Slide)) && (VMAddress <= (Section->addr + Slide + Section->size)))
                     {
                         if (Segment) *Segment = [NSString stringWithUTF8String: Section->segname];
                         SectionName = [NSString stringWithUTF8String: Section->sectname];
@@ -312,7 +318,7 @@ mach_vm_address_t FFImageInProcessAddressOfSymbol(FFProcess *Process, mach_vm_ad
     return Address;
 }
 
-_Bool FFImageUsesSharedCacheSlide(FFProcess *Process, mach_vm_address_t ImageLoadAddress)
+_Bool FFImageInProcessUsesSharedCacheSlide(FFProcess *Process, mach_vm_address_t ImageLoadAddress)
 {
     __block _Bool UsesSharedCacheSlide = FALSE;
     FFImageInProcess(Process, ImageLoadAddress, Process.is64? (FFIMAGE_ACTION)^(const struct mach_header_64 *data){

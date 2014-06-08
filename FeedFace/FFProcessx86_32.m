@@ -152,8 +152,7 @@
     
     __block mach_vm_address_t Slide;
     FFImageInProcess(self, ImageLoadAddress, (FFIMAGE_ACTION)^(const struct mach_header *data){
-        if (FFImageUsesSharedCacheSlide(self, ImageLoadAddress)) Slide = [self sharedCacheSlide];
-        else if (data->flags & MH_PIE) Slide = 0x1000;
+        if (data->flags & MH_PIE) Slide = 0x1000;
         else Slide = 0;
     }, NULL, NULL);
     
